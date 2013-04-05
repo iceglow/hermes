@@ -6,6 +6,6 @@ var AppView = Backbone.View.extend({
   openInAppBrowser: function (event) {
     event.preventDefault();
     var url = event.currentTarget.href;
-    window.open(url, '_blank', 'location=yes');
+    window.open(url, '_blank', 'location=no');
   }
 });
