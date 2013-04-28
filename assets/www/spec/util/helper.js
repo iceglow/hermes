@@ -1,5 +1,5 @@
 afterEach(function () {
-  document.getElementById('stage').innerHTML = '';
+  $('#stage').remove();
   $('body > :not([id=HTMLReporter])').hide();
 });
 
@@ -12,6 +12,8 @@ var helper = {
 };
 
 beforeEach(function () {
+  $('div[data-role="page"]:not([data-url=""])').remove();
+  $('body').append("<div id='stage' data-role='page'></div>");
 
   this.validResponse = function (responseText) {
     return [
