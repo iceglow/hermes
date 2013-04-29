@@ -3,14 +3,6 @@ afterEach(function () {
   $('body > :not([id=HTMLReporter])').hide();
 });
 
-var helper = {
-  trigger: function (obj, name) {
-    var e = document.createEvent('Event');
-    e.initEvent(name, true, true);
-    obj.dispatchEvent(e);
-  }
-};
-
 beforeEach(function () {
   $('div[data-role="page"]:not([data-url=""])').remove();
   $('body').append("<div id='stage' data-role='page'></div>");
@@ -23,3 +15,15 @@ beforeEach(function () {
     ];
   };
 });
+
+var helper = {
+  trigger: function (obj, name) {
+    var e = document.createEvent('Event');
+    e.initEvent(name, true, true);
+    obj.dispatchEvent(e);
+  }
+};
+
+navigator.language = function () {
+  return "en-US";
+};
