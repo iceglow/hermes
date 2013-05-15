@@ -30,12 +30,11 @@
  */
 
 define([
-  'underscore',
   'backbone',
   'config',
   'jquery_mobile',
   'locale'
-], function (_, Backbone) {
+], function (Backbone) {
   return Backbone.View.extend({
 
     initialize: function () {
