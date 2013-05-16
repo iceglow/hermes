@@ -36,6 +36,6 @@ $(document).on("mobileinit", function () {
   $.mobile.pushStateEnabled = false;
   $.mobile.page.prototype.options.domCache = true;
   $.mobile.ajaxEnabled = false;
-  $.mobile.linkBindingEnabled = true;
-  $.mobile.hashListeningEnabled = true;
+  $.mobile.linkBindingEnabled = false;
+  $.mobile.hashListeningEnabled = false;
 });
