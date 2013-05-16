@@ -31,19 +31,27 @@
 
 define([
   'backbone',
-  'core/js/views/start-view'
-], function (Backbone, StartView) {
+  'core/js/views/start-view',
+  'service/js/views/student-service-view'
+], function (Backbone, StartView, ServiceView) {
   return Backbone.Router.extend({
 
     routes: {
+      "studentservice": "studentservice",
+      "start": "defaultRoute",
       "*actions": "defaultRoute"
     },
 
     defaultRoute: function (actions) {
       var view = new StartView({ el: $('#page-home') });
-      view.$el.trigger("pagecreate");
+      $.mobile.changePage(view.$el);
       view.render();
+    },
 
+    studentservice: function () {
+      var view = new ServiceView({ el: $('#studentservice') });
+      $.mobile.changePage(view.$el);
+      view.render();
     }
   });
 });

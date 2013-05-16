@@ -45,7 +45,8 @@ require.config({
     defaults: 'js/default',
 
     // Application
-    core: window.location.href.match(/(.*\/www)\/.*/)[1]
+    core: window.location.href.match(/(.*\/www)\/.*/)[1],
+    service: window.location.href.match(/(.*\/www)\/.*/)[1] + '/studentservice'
   },
   priority: ['jquery', 'jquery_mobile', 'jquery_mobile_config', 'underscore', 'backbone', 'i18n'],
   shim: {
@@ -70,18 +71,15 @@ require.config({
       deps: ['jquery', 'common']
     },
     jquery_mobile: {
-      deps: ['jquery', 'defaults']
-    },
-    jquery_mobile_config: {
-      deps: ['jquery_mobile']
+      deps: ['jquery', 'defaults', 'jquery_mobile_config']
     }
   }
 });
 
 require([
-  'jquery',
+  'backbone',
   'js/routers/core-router',
-], function ($, CoreRouter) {
+], function (Backbone, CoreRouter) {
   $(document).ready(function () {
     var router = new CoreRouter();
     Backbone.history.start();
