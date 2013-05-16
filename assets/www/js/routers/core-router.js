@@ -37,8 +37,9 @@ define([
   return Backbone.Router.extend({
 
     routes: {
-      "studentservice": "studentservice",
       "start": "defaultRoute",
+      "studentservice": "studentservice",
+      "info": "info",
       "*actions": "defaultRoute"
     },
 
@@ -50,6 +51,12 @@ define([
 
     studentservice: function () {
       var view = new ServiceView({ el: $('#studentservice') });
+      $.mobile.changePage(view.$el);
+      view.render();
+    },
+
+    info: function () {
+      var view = new ServiceView({ el: $('#info') });
       $.mobile.changePage(view.$el);
       view.render();
     }
