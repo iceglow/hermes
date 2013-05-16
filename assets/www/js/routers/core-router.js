@@ -32,8 +32,9 @@
 define([
   'backbone',
   'core/js/views/start-view',
-  'service/js/views/student-service-view'
-], function (Backbone, StartView, ServiceView) {
+  'service/js/views/student-service-view',
+  'info/js/views/info-view'
+], function (Backbone, StartView, ServiceView, InfoView) {
   return Backbone.Router.extend({
 
     routes: {
@@ -56,7 +57,7 @@ define([
     },
 
     info: function () {
-      var view = new ServiceView({ el: $('#info') });
+      var view = new InfoView({ el: $('#info') });
       $.mobile.changePage(view.$el);
       view.render();
     }
