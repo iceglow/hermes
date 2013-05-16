@@ -29,62 +29,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-require.config({
-  baseUrl: window.location.href.match(/(.*\/www)\/.*/)[1],
-  paths: {
-    // Dependencies
-    jquery: 'js/lib/jquery-1.8.2.min',
-    jquery_mobile: 'js/lib/jquery.mobile-1.3.1.min',
-    jquery_mobile_config: 'js/jquery.mobile-config',
-    underscore: 'js/lib/underscore-1.4.4-min',
-    backbone: 'js/lib/backbone-1.0.0-min',
-    i18n: 'js/lib/i18next-1.6.2.min',
-    locale: 'js/locale',
-    config: 'js/config',
-    common: 'js/jst/common',
-    defaults: 'js/default',
+define([
+  'backbone',
+  'core/js/views/start-view'
+], function (Backbone, StartView) {
+  return Backbone.Router.extend({
 
-    // Application
-    core: window.location.href.match(/(.*\/www)\/.*/)[1]
-  },
-  priority: ['jquery', 'jquery_mobile', 'jquery_mobile_config', 'underscore', 'backbone', 'i18n'],
-  shim: {
-    underscore: {
-      exports: "_"
+    routes: {
+      "*actions": "defaultRoute"
     },
-    backbone: {
-      deps: ['underscore', 'jquery'],
-      exports: 'Backbone'
-    },
-    i18n: {
-      deps: ['jquery'],
-      exports: 'i18n'
-    },
-    locale: {
-      deps: ['i18n']
-    },
-    common: {
-      deps: ['underscore']
-    },
-    defaults: {
-      deps: ['jquery', 'common']
-    },
-    jquery_mobile: {
-      deps: ['jquery', 'defaults']
-    },
-    jquery_mobile_config: {
-      deps: ['jquery_mobile']
+
+    defaultRoute: function (actions) {
+      var view = new StartView({ el: $('#page-home') });
+      view.$el.trigger("pagecreate");
+      view.render();
+
     }
-  }
-});
-
-require([
-  'jquery',
-  'js/routers/core-router',
-], function ($, CoreRouter) {
-  $(document).ready(function () {
-    var router = new CoreRouter();
-    Backbone.history.start();
   });
 });
-
