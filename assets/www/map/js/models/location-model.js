@@ -36,77 +36,83 @@
  * @author <a href="mailto:joakim.lundin@su.se">Joakim Lundin</a>
  * @type {Backbone.Model}
  */
-var Location = Backbone.Model.extend(
-    /** @lends Location */
-    {
-      defaults: {
-        id: 0,
-        name: 'unknown',
-        campus: 'unknown',
-        type: 'unknown',
-        shape: "point",
-        text: "",
-        coords: [],
-        directionAware: true,
-        hasIcon: false,
-        buildingName: null,
-        buildingId: null,
-        handicapAdapted: false,
-        visible: true,
-        pin: new google.maps.MarkerImage(
-            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkw' +
-                'AAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wKExQWIJ3tCJcAAAC/SURBVAjXNc4/jgFRAMDh3/tj8oaJKchENBRsQTZ2VCpncAFO4A' +
-                'QkDqB0AYnCCfRuQGYzhUypUWzEyEp072n4TvABUNS6Hxmzqfl+Ehmz9pX6BhAlrQejZnM/7XZNKwzJ8pxVmj525/NQlwqF+SyOTadScVgrqv' +
-                'W6Czwv2F8uCynh5ysMwVoBgLWiXS4joSctHE55DlI6AKR02f2OhaNykP09n+NGEHieUvxer2KZJP/p7TbhvY0jY7bv7eazfQE67zjGgilfew' +
-                'AAAABJRU5ErkJggg==')
-      },
+define([
+  'backbone',
+  'config',
+  'async!http://maps.google.com/maps/api/js?key=AIzaSyDj0Ddh5c4FOvG3NgxFFBwuOZB-8E1pNbo&sensor=true!callback'
+], function (Backbone) {
+  return Backbone.Model.extend(
+      /** @lends Location */
+      {
+        defaults: {
+          id: 0,
+          name: 'unknown',
+          campus: 'unknown',
+          type: 'unknown',
+          shape: "point",
+          text: "",
+          coords: [],
+          directionAware: true,
+          hasIcon: false,
+          buildingName: null,
+          buildingId: null,
+          handicapAdapted: false,
+          visible: true,
+          pin: new google.maps.MarkerImage(
+              'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkw' +
+                  'AAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wKExQWIJ3tCJcAAAC/SURBVAjXNc4/jgFRAMDh3/tj8oaJKchENBRsQTZ2VCpncAFO4A' +
+                  'QkDqB0AYnCCfRuQGYzhUypUWzEyEp072n4TvABUNS6Hxmzqfl+Ehmz9pX6BhAlrQejZnM/7XZNKwzJ8pxVmj525/NQlwqF+SyOTadScVgrqv' +
+                  'W6Czwv2F8uCynh5ysMwVoBgLWiXS4joSctHE55DlI6AKR02f2OhaNykP09n+NGEHieUvxer2KZJP/p7TbhvY0jY7bv7eazfQE67zjGgilfew' +
+                  'AAAABJRU5ErkJggg==')
+        },
 
-      /**
-       * Get google points for this location.
-       *
-       * @return {Array} an array of google.maps.LatLng representing the points for this location.
-       */
-      getGPoints: function () {
-        var points = [];
+        /**
+         * Get google points for this location.
+         *
+         * @return {Array} an array of google.maps.LatLng representing the points for this location.
+         */
+        getGPoints: function () {
+          var points = [];
 
-        $.each(this.get("coords"), function (index, point) {
-          var coord = new google.maps.LatLng(point[0], point[1]);
-          points.push(coord);
-        });
+          $.each(this.get("coords"), function (index, point) {
+            var coord = new google.maps.LatLng(point[0], point[1]);
+            points.push(coord);
+          });
 
-        return points;
-      },
+          return points;
+        },
 
-      /**
-       * Get a generated poi-type.
-       *
-       * @return {string} the poi-type
-       */
-      getPoiType: function () {
-        return this.get('campus') + "." + this.get('type');
-      },
+        /**
+         * Get a generated poi-type.
+         *
+         * @return {string} the poi-type
+         */
+        getPoiType: function () {
+          return this.get('campus') + "." + this.get('type');
+        },
 
-      /**
-       * The name for this model.
-       *
-       * @returns the name.
-       */
-      getName: function () {
-        var name = this.get('name');
+        /**
+         * The name for this model.
+         *
+         * @returns the name.
+         */
+        getName: function () {
+          var name = this.get('name');
 
-        if (this.has('buildingName')) {
-          name += ", " + this.get('buildingName');
+          if (this.has('buildingName')) {
+            name += ", " + this.get('buildingName');
+          }
+
+          return name;
+        },
+
+        /**
+         * Checks if the location is visible on the map.
+         *
+         * @return true if visible, false if not.
+         */
+        isVisible: function () {
+          return this.get('visible');
         }
-
-        return name;
-      },
-
-      /**
-       * Checks if the location is visible on the map.
-       *
-       * @return true if visible, false if not.
-       */
-      isVisible: function () {
-        return this.get('visible');
-      }
-    });
+      });
+});

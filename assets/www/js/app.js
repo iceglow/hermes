@@ -33,12 +33,19 @@ require.config({
   baseUrl: window.location.href.match(/(.*\/www)\/.*/)[1],
   paths: {
     // Dependencies
+    async: 'js/lib/requirejs-plugins-1.0.1/async',
+    goog: 'js/lib/requirejs-plugins-1.0.1/goog',
     jquery: 'js/lib/jquery-1.8.2.min',
     jquery_mobile: 'js/lib/jquery.mobile-1.3.1.min',
     jquery_mobile_config: 'js/jquery.mobile-config',
+    jquery_ui_map: 'map/js/lib/jquery.ui.map/jquery.ui.map.min',
+//    jquery_ui_map_overlays: 'map/js/lib/jquery.ui.map/jquery.ui.map.overlays.min',
+//    jquery_ui_map_services: 'map/js/lib/jquery.ui.map/jquery.ui.map.services.min',
+    //google_maps_api: 'async!http://maps.google.com/maps/api/js?key=AIzaSyDj0Ddh5c4FOvG3NgxFFBwuOZB-8E1pNbo&sensor=true!callback',
     underscore: 'js/lib/underscore-1.4.4-min',
     backbone: 'js/lib/backbone-1.0.0-min',
     i18n: 'js/lib/i18next-1.6.2.min',
+    fastclick: 'js/lib/fastclick/fastclick.min',
     locale: 'js/locale',
     config: 'js/config',
     common: 'js/jst/common',
@@ -46,9 +53,11 @@ require.config({
 
     // Application
     core: window.location.href.match(/(.*\/www)\/.*/)[1],
-    service: window.location.href.match(/(.*\/www)\/.*/)[1] + '/studentservice'
+    map: window.location.href.match(/(.*\/www)\/.*/)[1] + '/map',
+    service: window.location.href.match(/(.*\/www)\/.*/)[1] + '/studentservice',
+    info: window.location.href.match(/(.*\/www)\/.*/)[1] + '/info'
   },
-  priority: ['jquery', 'jquery_mobile', 'jquery_mobile_config', 'underscore', 'backbone', 'i18n'],
+  priority: ['jquery', 'jquery_ui_map', 'jquery_mobile', 'jquery_mobile_config', 'underscore', 'backbone', 'i18n'],
   shim: {
     underscore: {
       exports: "_"
@@ -68,10 +77,18 @@ require.config({
       deps: ['underscore']
     },
     defaults: {
-      deps: ['jquery', 'common']
+      deps: ['jquery', 'common', 'fastclick']
     },
     jquery_mobile: {
       deps: ['jquery', 'defaults', 'jquery_mobile_config']
+    },
+    jquery_mobile_config: {
+      deps: ['jquery']
+    },
+    jquery_ui_map: {
+      deps: ['jquery',
+        'async!http://maps.google.com/maps/api/js?key=AIzaSyDj0Ddh5c4FOvG3NgxFFBwuOZB-8E1pNbo&sensor=true!callback'
+      ]
     }
   }
 });

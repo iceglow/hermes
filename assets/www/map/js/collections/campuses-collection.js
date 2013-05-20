@@ -37,27 +37,33 @@
  * @author <a href="mailto:lucien.bokouka@su.se">Lucien Bokouka</a>
  * @type {Backbone.Collection}
  */
-var Campuses = Backbone.Collection.extend(
-    /** @lends Campuses */
-    {
-      /** The model used for this collection. */
-      model: Campus,
+define([
+  'backbone',
+  'map/js/models/campus-model',
+  'config'
+], function (Backbone, Campus) {
+  return Backbone.Collection.extend(
+      /** @lends Campuses */
+      {
+        /** The model used for this collection. */
+        model: Campus,
 
-      /**
-       * Generates the URL to get Campuses.
-       *
-       * @return {string} the URL.
-       */
-      url: function () {
-        return config.map.campuses.url;
-      },
+        /**
+         * Generates the URL to get Campuses.
+         *
+         * @return {string} the URL.
+         */
+        url: function () {
+          return config.map.campuses.url;
+        },
 
-      /**
-       * This is needed by SearchView.
-       *
-       * @return {Array} an array of filtered Campuses.
-       */
-      bySearchable: function () {
-        return this;
-      }
-    });
+        /**
+         * This is needed by SearchView.
+         *
+         * @return {Array} an array of filtered Campuses.
+         */
+        bySearchable: function () {
+          return this;
+        }
+      });
+});

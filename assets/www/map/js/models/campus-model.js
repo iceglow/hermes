@@ -37,28 +37,33 @@
  * @author <a href="mailto:lucien.bokouka@su.se">Lucien Bokouka</a>
  * @type {Backbone.Model}
  */
-var Campus = Backbone.Model.extend(
-    /** @lends Campus */
-    {
-      /**
-       * Defaults for this model
-       */
-      defaults: {
-        "id": 0,
-        "name": 'Unknown',
-        "coords": [59.363317, 18.0592], // Default to Frescati campus.
-        "zoom": 15
-      },
+define([
+  'backbone',
+  'config'
+], function (Backbone) {
+  return Backbone.Model.extend(
+      /** @lends Campus */
+      {
+        /**
+         * Defaults for this model
+         */
+        defaults: {
+          "id": 0,
+          "name": 'Unknown',
+          "coords": [59.363317, 18.0592], // Default to Frescati campus.
+          "zoom": 15
+        },
 
-      getLat: function () {
-        return this.get('coords')[0];
-      },
+        getLat: function () {
+          return this.get('coords')[0];
+        },
 
-      getLng: function () {
-        return this.get('coords')[1];
-      },
+        getLng: function () {
+          return this.get('coords')[1];
+        },
 
-      getZoom: function () {
-        return this.get('zoom');
-      }
-    });
+        getZoom: function () {
+          return this.get('zoom');
+        }
+      });
+});

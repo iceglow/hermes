@@ -37,172 +37,177 @@
  * @author <a href="mailto:lucien.bokouka@su.se">Lucien Bokouka</a>
  * @type {Backbone.View}
  */
-var InfoWindowView = Backbone.View.extend(
-    /** @lends InfoWindow */
-    {
+define([
+  'backbone',
+  'config',
+  'async!http://maps.google.com/maps/api/js?key=AIzaSyDj0Ddh5c4FOvG3NgxFFBwuOZB-8E1pNbo&sensor=true!callback'
+], function (Backbone) {
+  return Backbone.View.extend(
+      /** @lends InfoWindow */
+      {
 
-      infoWindow: null,
-      destination: null,
+        infoWindow: null,
+        destination: null,
 
-      /**
-       * @constructs
-       * @param options Options for this class. Expects a {MapView}.
-       */
-      initialize: function (options) {
-        _.bindAll(this, 'open', 'close', 'updateRelatedLinks');
+        /**
+         * @constructs
+         * @param options Options for this class. Expects a {MapView}.
+         */
+        initialize: function (options) {
+          _.bindAll(this, 'open', 'close', 'updateRelatedLinks');
 
-        this.appModel = options.appModel;
-        this.appModel.on("change:showingNonVisibleForLocation", function () {
-          var showingNonVisibleForLocation = this.appModel.get('showingNonVisibleForLocation');
-          this.updateRelatedLinks(showingNonVisibleForLocation ? showingNonVisibleForLocation.location : null);
-        }, this);
+          this.appModel = options.appModel;
+          this.appModel.on("change:showingNonVisibleForLocation", function () {
+            var showingNonVisibleForLocation = this.appModel.get('showingNonVisibleForLocation');
+            this.updateRelatedLinks(showingNonVisibleForLocation ? showingNonVisibleForLocation.location : null);
+          }, this);
 
-        this.infoWindow = new google.maps.InfoWindow({
-          maxWidth: 260
-        });
-
-        var self = this;
-
-        // TODO: refactor to (backbone) events: { [selector]: [function] }, couldn't get this to work. /lucien
-        $(document).on("click.info-window-view", ".iw .dir-button", function () {
-          self.close();
-
-          $(".dir-button").each(function () {
-            $(this).removeClass("selected");
+          this.infoWindow = new google.maps.InfoWindow({
+            maxWidth: 260
           });
-          $(this).addClass("selected");
-          options.mapView.getDirections(this.id, self.destination);
-        });
-      },
 
-      /**
-       * Remove handler for the view.
-       */
-      remove: function () {
-        this.close();
-        $(document).off(".info-window-view");
-        Backbone.View.prototype.remove.call(this);
-      },
+          var self = this;
 
-      /**
-       * Sets the destination.
-       * @param destination
-       */
-      setDestination: function (destination) {
-        this.destination = destination;
-      },
+          // TODO: refactor to (backbone) events: { [selector]: [function] }, couldn't get this to work. /lucien
+          $(document).on("click.info-window-view", ".iw .dir-button", function () {
+            self.close();
 
-      /**
-       * Opens the info window.
-       * @param model
-       * @param anchor
-       * @param latlng
-       */
-      open: function (model, anchor, latlng) {
-        this.close(); // close previous infowindow
-
-        //translate info window body by altering var text
-        var text = this.getLanguageKey();
-
-        var tOptions = {
-          name: model.getName(),
-          displayDirections: model.get('directionAware'),
-          model: model,
-          itemText: model.get(text)
-        };
-
-        if (model.get('type') === 'building') {
-          var hasElevators = this.appModel.locations.byBuildingAndTypeAndHandicapAdapted(
-              model,
-              ['elevator'],
-              true
-          ).size() > 0;
-
-          var hasEntrances = this.appModel.locations.byBuildingAndTypeAndHandicapAdapted(
-              model,
-              ['entrance'],
-              true
-          ).size() > 0;
-
-
-          var toilets = this.appModel.locations.byBuildingAndTypeAndHandicapAdapted(
-              model,
-              ['toilet'],
-              true
-          );
-
-          var floors = [];
-          _.each(_.flatten(toilets), function (toilet) {
-            floors.push(toilet.get('floor'));
+            $(".dir-button").each(function () {
+              $(this).removeClass("selected");
+            });
+            $(this).addClass("selected");
+            options.mapView.getDirections(this.id, self.destination);
           });
-          floors = _.uniq(floors.sort(), true).join(', ');
+        },
 
-          tOptions.hasElevators = hasElevators;
-          tOptions.hasEntrances = hasEntrances;
-          tOptions.tFloors = floors;
+        /**
+         * Remove handler for the view.
+         */
+        remove: function () {
+          this.close();
+          $(document).off(".info-window-view");
+          Backbone.View.prototype.remove.call(this);
+        },
+
+        /**
+         * Sets the destination.
+         * @param destination
+         */
+        setDestination: function (destination) {
+          this.destination = destination;
+        },
+
+        /**
+         * Opens the info window.
+         * @param model
+         * @param anchor
+         * @param latlng
+         */
+        open: function (model, anchor, latlng) {
+          this.close(); // close previous infowindow
+
+          //translate info window body by altering var text
+          var text = this.getLanguageKey();
+
+          var tOptions = {
+            name: model.getName(),
+            displayDirections: model.get('directionAware'),
+            model: model,
+            itemText: model.get(text)
+          };
+
+          if (model.get('type') === 'building') {
+            var hasElevators = this.appModel.locations.byBuildingAndTypeAndHandicapAdapted(
+                model,
+                ['elevator'],
+                true
+            ).size() > 0;
+
+            var hasEntrances = this.appModel.locations.byBuildingAndTypeAndHandicapAdapted(
+                model,
+                ['entrance'],
+                true
+            ).size() > 0;
+
+
+            var toilets = this.appModel.locations.byBuildingAndTypeAndHandicapAdapted(
+                model,
+                ['toilet'],
+                true
+            );
+
+            var floors = [];
+            _.each(_.flatten(toilets), function (toilet) {
+              floors.push(toilet.get('floor'));
+            });
+            floors = _.uniq(floors.sort(), true).join(', ');
+
+            tOptions.hasElevators = hasElevators;
+            tOptions.hasEntrances = hasEntrances;
+            tOptions.tFloors = floors;
+          }
+
+          var template = JST['map/infoWindow'](tOptions);
+
+          this.infoWindow.setContent(template);
+          if (latlng) {
+            this.infoWindow.setPosition(latlng);
+            this.infoWindow.open(anchor.getMap());
+          } else {
+            this.infoWindow.open(anchor.getMap(), anchor);
+          }
+
+          var self = this;
+          $("a.showRelated", "#info_window").click(function () {
+            var $this = $(this);
+            self.appModel.showNonVisibleForLocationByRelation(model, $this.data("related-by"), $this.data("related-types").split(" "));
+          });
+          $("a.hideRelated", "#info_window").click(function () {
+            self.appModel.showNonVisibleForLocationByRelation(null);
+          });
+
+          this.updateRelatedLinks(model);
+
+        },
+
+        getLanguageKey: function () {
+          var text = "textEn";
+          if (this.getRootLanguage() === 'sv') {
+            text = 'text';
+          } else {
+            text = 'textEn';
+          }
+          return text;
+        },
+
+        getRootLanguage: function () {
+          language = navigator.language.split("-");
+          rootLanguage = (language[0]);
+          return rootLanguage;
+        },
+
+        /**
+         * Updates links for showing related locations in the infowindow given the location that related is shown for
+         * @param location
+         */
+        updateRelatedLinks: function (location) {
+          $('a.showRelated', '#info_window').show();
+          $('a.hideRelated', '#info_window').hide();
+          var showingNonVisibleForLocation = this.appModel.get("showingNonVisibleForLocation");
+          if (showingNonVisibleForLocation && location === showingNonVisibleForLocation.location) {
+            var attrQuery = '[data-related-by="' + showingNonVisibleForLocation.relatedBy + '"][data-related-types="' + showingNonVisibleForLocation.types.join(" ") + '"]';
+            $('a.showRelated' + attrQuery, '#info_window').hide();
+            $('a.hideRelated' + attrQuery, '#info_window').show();
+          }
+        },
+
+        /**
+         * Closes the info window.
+         */
+        close: function () {
+          if (this.infoWindow) {
+            this.infoWindow.close();
+          }
         }
-
-        var template = JST['map/infoWindow'](tOptions);
-
-        this.infoWindow.setContent(template);
-        if (latlng) {
-          this.infoWindow.setPosition(latlng);
-          this.infoWindow.open(anchor.getMap());
-        } else {
-          this.infoWindow.open(anchor.getMap(), anchor);
-        }
-
-        var self = this;
-        $("a.showRelated", "#info_window").click(function () {
-          var $this = $(this);
-          self.appModel.showNonVisibleForLocationByRelation(model, $this.data("related-by"), $this.data("related-types").split(" "));
-        });
-        $("a.hideRelated", "#info_window").click(function () {
-          self.appModel.showNonVisibleForLocationByRelation(null);
-        });
-
-        this.updateRelatedLinks(model);
-
-      },
-
-      getLanguageKey: function () {
-        var text = "textEn";
-        if (this.getRootLanguage() === 'sv') {
-          text = 'text';
-        } else {
-          text = 'textEn';
-        }
-        return text;
-      },
-
-      getRootLanguage: function () {
-        language = navigator.language.split("-");
-        rootLanguage = (language[0]);
-        return rootLanguage;
-      },
-
-      /**
-       * Updates links for showing related locations in the infowindow given the location that related is shown for
-       * @param location
-       */
-      updateRelatedLinks: function (location) {
-        $('a.showRelated', '#info_window').show();
-        $('a.hideRelated', '#info_window').hide();
-        var showingNonVisibleForLocation = this.appModel.get("showingNonVisibleForLocation");
-        if (showingNonVisibleForLocation && location === showingNonVisibleForLocation.location) {
-          var attrQuery = '[data-related-by="' + showingNonVisibleForLocation.relatedBy + '"][data-related-types="' + showingNonVisibleForLocation.types.join(" ") + '"]';
-          $('a.showRelated' + attrQuery, '#info_window').hide();
-          $('a.hideRelated' + attrQuery, '#info_window').show();
-        }
-      },
-
-      /**
-       * Closes the info window.
-       */
-      close: function () {
-        if (this.infoWindow) {
-          this.infoWindow.close();
-        }
-      }
-    });
-
+      });
+});
