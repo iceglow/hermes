@@ -29,26 +29,32 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-afterEach(function () {
-  document.getElementById('stage').innerHTML = '';
-  $('body > :not([id=HTMLReporter])').hide();
-});
+define([
+  'jasmine',
+  'jquery_mobile'
+], function () {
 
-beforeEach(function () {
-  $.mobile.pageContainer = $('body');
-  this.validResponse = function (responseText) {
-    return [
-      200,
-      {"Content-Type": "application/json"},
-      JSON.stringify(responseText)
-    ];
+  afterEach(function () {
+    document.getElementById('stage').innerHTML = '';
+    $('body > :not([id=HTMLReporter])').hide();
+  });
+
+  beforeEach(function () {
+    $.mobile.pageContainer = $('body');
+    this.validResponse = function (responseText) {
+      return [
+        200,
+        {"Content-Type": "application/json"},
+        JSON.stringify(responseText)
+      ];
+    };
+  });
+
+  var helper = {
+    trigger: function (obj, name) {
+      var e = document.createEvent('Event');
+      e.initEvent(name, true, true);
+      obj.dispatchEvent(e);
+    }
   };
 });
-
-var helper = {
-  trigger: function (obj, name) {
-    var e = document.createEvent('Event');
-    e.initEvent(name, true, true);
-    obj.dispatchEvent(e);
-  }
-};
