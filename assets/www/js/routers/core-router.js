@@ -35,7 +35,8 @@ define([
   'map/js/views/app-view',
   'service/js/views/student-service-view',
   'info/js/views/info-view',
-  'map/js/models/app-model'
+  'map/js/models/app-model',
+  'jquery_mobile'
 ], function (Backbone, StartView, AppView, ServiceView, InfoView, AppModel) {
   return Backbone.Router.extend({
 

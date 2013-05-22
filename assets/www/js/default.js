@@ -30,11 +30,11 @@
  */
 
 define([
-  'core/js/config',
+  'config',
   'core/js/jst/common',
   'i18n',
   'fastclick'
-], function () {
+], function (config) {
   $(document).on('deviceready', function () {
     window.gaPlugin = window.plugins.gaPlugin;
     gaPlugin.init(

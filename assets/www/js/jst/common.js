@@ -29,11 +29,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!("JST" in window) || "JST" === undefined) {
-  window.JST = {};
-}
+define([
+  'underscore'
+], function (_) {
+  if (!("JST" in window) || "JST" === undefined) {
+    window.JST = {};
+  }
 
-JST['common/header'] = _.template(" \
+  JST['common/header'] = _.template(" \
     <h1><span><%= title %></span></h1> \
     \
     <% if (backbutton) { %>\
@@ -58,7 +61,7 @@ JST['common/header'] = _.template(" \
     <% } %> \
 ");
 
-JST['common/external-link-dialog'] = _.template(' \
+  JST['common/external-link-dialog'] = _.template(' \
   <div data-role="content"> \
     <p><span data-i18n="common.external.question">The page will be displayed in an external browser, do you wish to continue?</span></p> \
       <fieldset class="ui-grid-a"> \
@@ -68,3 +71,4 @@ JST['common/external-link-dialog'] = _.template(' \
       </fieldset> \
   </div> \
 ');
+});

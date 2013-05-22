@@ -28,10 +28,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-define([,
+define([
   'jquery_mobile',
   'core/js/default',
-  'core/js/config',
   'core/js/jst/common',
   'spec/mocks/plugin-mocks'
 ], function () {
@@ -186,12 +185,14 @@ define([,
 
         $(document).trigger('deviceready');
 
-        expect(window.plugins.gaPlugin.init).toHaveBeenCalledWith(
-            null,
-            null,
-            config.core.ga.account,
-            jasmine.any(Number)
-        );
+        require(['config'], function (config) {
+          expect(window.plugins.gaPlugin.init).toHaveBeenCalledWith(
+              null,
+              null,
+              config.core.ga.account,
+              jasmine.any(Number)
+          );
+        });
       });
 
       it('should set max seconds = 10 on init', function () {

@@ -50,6 +50,8 @@ require.config({
     console_runner: 'spec/lib/phantom-jasmine/console-runner',
     jasmine_junit_reporter: 'spec/lib/jasmine-reporters/jasmine.junit_reporter',
 
+    config: 'js/config',
+
     // Tests & stuff
     spec: 'spec',
     fixtures: 'spec/fixtures',
@@ -59,6 +61,7 @@ require.config({
     map: 'map'
   },
   priority: [
+    'config',
     'jasmine',
     'jquery',
     'jquery_mobile',
@@ -94,6 +97,9 @@ require.config({
     },
     jasmine_junit_reporter: {
       deps: ['jasmine']
+    },
+    config: {
+      exports: 'config'
     },
     // TODO: Remove when converted to AMD
     pm: {

@@ -31,7 +31,6 @@
 
 define([
   'backbone',
-  'config',
   'jquery_mobile',
   'locale'
 ], function (Backbone) {
