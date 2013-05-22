@@ -39,7 +39,7 @@
   <link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css"/>
   <link rel="stylesheet" href="css/SU-ThemeA-B.css"/>
   <link rel="stylesheet" href="css/SU-beta.css"/>
-  <link rel="stylesheet" href="css/mobile.css"/>
+  <link rel="stylesheet" href="css/start.css"/>
   <link rel="stylesheet" href="map/css/mapapp.css"/>
 
   <script type="text/javascript" charset="utf-8" src="cordova-2.5.0.js"></script>
@@ -51,65 +51,86 @@
 <div data-role="page" class="type-home" id="page-home" data-header="common/header">
   <!-- Home -->
   <div data-role="content">
-    <div id="buttongrid" class="ui-grid-b">
-      <div class="ui-block-a">
+    <div id="buttongrid" class="ui-grid-b button-grid">
+      <div class="ui-block-a buildings">
         <a href="#buildings">
-          <img src="img/icons/buildings.png"><br/>
+          <div class="button-container">
+            <div class="glare"></div>
+            <img src="img/icons/icon-building.svg"/>
+          </div>
           <span data-i18n="start.menuItem.buildings"></span>
         </a>
       </div>
       <div class="ui-block-b">
         <a href="#departments">
-          <img src="img/icons/departments.png"><br/>
+          <div class="button-container">
+            <div class="glare"></div>
+            <img src="img/icons/icon-departments.svg"/>
+          </div>
           <span data-i18n="start.menuItem.departments"></span>
         </a>
       </div>
       <div class="ui-block-c">
         <a href="#auditoriums">
-          <img src="img/icons/auditorium.png"><br/>
+          <div class="button-container">
+            <div class="glare"></div>
+            <img src="img/icons/icon-auditoriums.svg"/>
+          </div>
           <span data-i18n="start.menuItem.auditoriums"></span>
         </a>
       </div>
       <div class="ui-block-a">
         <a href="#computerLabs">
-          <img src="img/icons/computer_labs.png"><br/>
+          <div class="button-container">
+            <div class="glare"></div>
+            <img src="img/icons/icon-computer-labs.svg"/>
+          </div>
           <span data-i18n="start.menuItem.computerLabs"></span>
         </a>
       </div>
       <div class="ui-block-b">
         <a href="#parkingspaces">
-          <img src="img/icons/parking.png"><br/>
+          <div class="button-container">
+            <div class="glare"></div>
+            <img src="img/icons/icon-parking.svg"/>
+          </div>
           <span data-i18n="start.menuItem.parkingspaces"></span>
         </a>
       </div>
       <div class="ui-block-c">
         <a href="#restaurants">
-          <img src="img/icons/eat.png"><br/>
+          <div class="button-container">
+            <div class="glare"></div>
+            <img src="img/icons/icon-restaurants.svg"/>
+          </div>
           <span data-i18n="start.menuItem.restaurants"></span>
         </a>
       </div>
       <div class="ui-block-a">
-        <a href="sukatsearch/index.html" data-ajax="false">
-          <img src="img/icons/staff.png"><br/>
-          <span data-i18n="start.menuItem.sukatSearch"></span>
+        <a id="info-link" href="#info">
+          <div class="button-container">
+            <div class="glare"></div>
+            <img src="img/icons/icon-accessibility.svg"/>
+          </div>
+          <span data-i18n="start.menuItem.accessibility"></span>
         </a>
       </div>
       <div class="ui-block-b">
-        <a id="sisulink" data-i18n="[href]start.sisu.link" target="_blank" data-ajax="false">
-          <img src="img/icons/sisu.png"><br/>
-          <span data-i18n="start.menuItem.courses"></span>
-        </a>
-      </div>
-      <div class="ui-block-c">
         <a id="servicelink" href="#studentservice">
-          <img src="img/icons/studentservice.png"><br/>
+          <div class="button-container">
+            <div class="glare"></div>
+            <img src="img/icons/icon-student-service.svg"/>
+          </div>
           <span data-i18n="start.menuItem.studentService"></span>
         </a>
       </div>
-      <div class="ui-block-a">
-        <a id="info-link" href="#info">
-          <img src="img/icons/accessibility.png"><br/>
-          <span data-i18n="start.menuItem.accessibility"></span>
+      <div class="ui-block-c">
+        <a id="sisulink" data-i18n="[href]start.sisu.link" target="_blank" data-ajax="false">
+          <div class="button-container">
+            <div class="glare"></div>
+            <img src="img/icons/icon-sisu.svg"/>
+          </div>
+          <span data-i18n="start.menuItem.courses"></span>
         </a>
       </div>
     </div>
