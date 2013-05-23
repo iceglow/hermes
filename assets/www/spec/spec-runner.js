@@ -33,6 +33,8 @@ require.config({
   baseUrl: "./",
   paths: {
     // Dependencies
+    async: 'js/lib/requirejs-plugins-1.0.1/async.min',
+    goog: 'js/lib/requirejs-plugins-1.0.1/goog.min',
     jquery: 'js/lib/jquery-1.8.2.min',
     jquery_mobile: 'js/lib/jquery.mobile-1.3.1.min',
     jquery_mobile_config: 'js/jquery.mobile-config',
@@ -55,7 +57,7 @@ require.config({
 
     // Tests & stuff
     spec: 'spec',
-    fixtures: 'spec/fixtures',
+    fixtures: 'spec/util/fixtures',
 
     // Application
     core: './',
@@ -144,6 +146,7 @@ require([
   specs.push('spec/modules/start/start-view.spec');
   specs.push('spec/modules/info/info-view.spec');
   specs.push('spec/modules/student/student-service-view.spec');
+  specs.push('spec/modules/map/app-model.spec');
 
   $(function () {
     require(specs, function () {
