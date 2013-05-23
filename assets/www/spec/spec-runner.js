@@ -60,7 +60,8 @@ require.config({
     // Application
     core: './',
     map: 'map',
-    info: 'info'
+    info: 'info',
+    student: 'student'
   },
   priority: [
     'jasmine',
@@ -142,6 +143,7 @@ require([
   specs.push('spec/i18n.spec');
   specs.push('spec/modules/start/start-view.spec');
   specs.push('spec/modules/info/info-view.spec');
+  specs.push('spec/modules/student/student-service-view.spec');
 
   $(function () {
     require(specs, function () {
