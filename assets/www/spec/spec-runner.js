@@ -51,6 +51,7 @@ require.config({
     jasmine_junit_reporter: 'spec/lib/jasmine-reporters/jasmine.junit_reporter',
 
     config: 'js/config',
+    locale: 'js/locale',
 
     // Tests & stuff
     spec: 'spec',
@@ -61,7 +62,6 @@ require.config({
     map: 'map'
   },
   priority: [
-    'config',
     'jasmine',
     'jquery',
     'jquery_mobile',
@@ -97,9 +97,6 @@ require.config({
     },
     jasmine_junit_reporter: {
       deps: ['jasmine']
-    },
-    config: {
-      exports: 'config'
     },
     // TODO: Remove when converted to AMD
     pm: {
@@ -141,6 +138,7 @@ require([
 
   var specs = [];
   specs.push('spec/default.spec');
+  specs.push('spec/i18n.spec');
 
   $(function () {
     require(specs, function () {

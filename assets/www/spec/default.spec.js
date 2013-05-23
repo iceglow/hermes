@@ -28,12 +28,14 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
 define([
+  'config',
   'jquery_mobile',
   'core/js/default',
   'core/js/jst/common',
   'spec/mocks/plugin-mocks'
-], function () {
+], function (config) {
   describe('Default-header', function () {
 
     var testTitle = 'test-title';
@@ -185,14 +187,12 @@ define([
 
         $(document).trigger('deviceready');
 
-        require(['config'], function (config) {
-          expect(window.plugins.gaPlugin.init).toHaveBeenCalledWith(
-              null,
-              null,
-              config.core.ga.account,
-              jasmine.any(Number)
-          );
-        });
+        expect(window.plugins.gaPlugin.init).toHaveBeenCalledWith(
+            null,
+            null,
+            config.core.ga.account,
+            jasmine.any(Number)
+        );
       });
 
       it('should set max seconds = 10 on init', function () {
