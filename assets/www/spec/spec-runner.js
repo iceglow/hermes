@@ -101,13 +101,6 @@ require.config({
     },
     jasmine_junit_reporter: {
       deps: ['jasmine']
-    },
-    // TODO: Remove when converted to AMD
-    pm: {
-      deps: ['backbone']
-    },
-    ssv: {
-      deps: ['backbone']
     }
   }
 });
@@ -148,6 +141,7 @@ require([
   specs.push('spec/modules/student/student-service-view.spec');
   specs.push('spec/modules/map/app-model.spec');
   specs.push('spec/modules/map/campus-model.spec');
+  specs.push('spec/modules/map/location-model.spec');
 
   $(function () {
     require(specs, function () {

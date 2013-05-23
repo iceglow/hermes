@@ -33,10 +33,11 @@
  * Tests for the StartView
  */
 define([
+  'backbone',
   'core/js/views/start-view',
   'spec/mocks/plugin-mocks',
   'spec/mocks/navigator-mocks'
-], function (StartView) {
+], function (Backbone, StartView) {
   describe('Start view', function () {
     beforeEach(function () {
       $('#stage').append("<a id='sisulink' href='http://sisu.it.su.se'>sisu</a>");
@@ -62,16 +63,16 @@ define([
         expect(window.plugins.gaPlugin.trackPage).toHaveBeenCalledWith(null, null, 'http://sisu.it.su.se');
       });
     });
-  });
 
-  describe('on off event', function(){
-    it('should remove handler for the view', function(){
-      spyOn(Backbone.View.prototype, 'remove');
+    describe('on off event', function () {
+      it('should remove handler for the view', function () {
+        spyOn(Backbone.View.prototype, 'remove');
 
-      $(document).trigger('deviceready');
+        $(document).trigger('deviceready');
 
-      this.view.remove();
-      expect(Backbone.View.prototype.remove).toHaveBeenCalled();
+        this.view.remove();
+        expect(Backbone.View.prototype.remove).toHaveBeenCalled();
+      });
     });
   });
 });

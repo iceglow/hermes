@@ -33,9 +33,10 @@
  * Tests for the StudentView
  */
 define([
+  'backbone',
   'studentservice/js/views/student-service-view',
   'spec/mocks/plugin-mocks'
-], function (StudentView) {
+], function (Backbone, StudentView) {
   describe('Student view', function () {
     beforeEach(function () {
       var html = "<div data-role='page' id='studentservice_page' style='width:200px; height:200px'>" +
@@ -80,18 +81,17 @@ define([
         expect(window.plugins.gaPlugin.trackPage).toHaveBeenCalledWith(null, null, target.attr('href'));
       });
     });
-  });
 
-  describe('on off event', function(){
-    it('should remove handler for the view', function(){
-      spyOn(Backbone.View.prototype, 'remove');
+    describe('on off event', function () {
+      it('should remove handler for the view', function () {
+        spyOn(Backbone.View.prototype, 'remove');
 
-      $(document).trigger('deviceready');
+        $(document).trigger('deviceready');
 
-      this.view.remove();
-      expect(Backbone.View.prototype.remove).toHaveBeenCalled();
+        this.view.remove();
+        expect(Backbone.View.prototype.remove).toHaveBeenCalled();
+      });
     });
   });
-
 });
 

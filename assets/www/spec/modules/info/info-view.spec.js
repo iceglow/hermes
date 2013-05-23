@@ -34,9 +34,10 @@
  */
 
 define([
+  'backbone',
   'info/js/views/info-view',
   'spec/mocks/plugin-mocks'
-], function (InfoView) {
+], function (Backbone, InfoView) {
   describe('Info view', function () {
     beforeEach(function () {
       this.view = new InfoView();
@@ -51,16 +52,16 @@ define([
         expect(window.plugins.gaPlugin.trackPage).toHaveBeenCalledWith(null, null, "accessibility/index.html");
       });
     });
-  });
 
-  describe('on off event', function(){
-    it('should remove handler for the view', function(){
-      spyOn(Backbone.View.prototype, 'remove');
+    describe('on off event', function () {
+      it('should remove handler for the view', function () {
+        spyOn(Backbone.View.prototype, 'remove');
 
-      $(document).trigger('deviceready');
+        $(document).trigger('deviceready');
 
-      this.view.remove();
-      expect(Backbone.View.prototype.remove).toHaveBeenCalled();
+        this.view.remove();
+        expect(Backbone.View.prototype.remove).toHaveBeenCalled();
+      });
     });
-  })
+  });
 });
