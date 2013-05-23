@@ -40,7 +40,7 @@ define([
   'backbone',
   'map/js/models/location-model',
   'config'
-], function (Backbone, Location) {
+], function (Backbone, Location, config) {
   return Backbone.Collection.extend(
       /** @lends Locations */
       {
