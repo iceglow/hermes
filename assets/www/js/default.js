@@ -29,82 +29,89 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-$(document).on('deviceready', function () {
-  window.gaPlugin = window.plugins.gaPlugin;
-  gaPlugin.init(
-      null, /* suppress success */
-      null, /* suppress errors */
-      config.core.ga.account,
-      10 // Seconds between sending stats.
-  );
-});
-
-/*
- * Default handling of generic header triggered by data-header attribute
- */
-$(document).on('pagecreate', '[data-role="page"][data-header]', function () {
-  var $this = $(this),
-      headerTemplate = $this.data("header"),
-      headerOptions = $this.data("header-options") || "",
-      optionsArr = headerOptions.split(" ");
-
-  var attrs = {
-    "data-theme": "a",
-    "data-role": "header"
-  };
-
-  var templateData = _.inject(optionsArr, function (memo, option) {
-    memo[option] = true;
-    return memo;
-  }, {
-    title: $this.data('header-title') || ($(document).attr('title') || 'Titel saknas'),
-    backbutton: false,
-    menubutton: false,
-    homebutton: false
+define([
+  'config',
+  'core/js/jst/common',
+  'i18n',
+  'fastclick'
+], function (config) {
+  $(document).on('deviceready', function () {
+    window.gaPlugin = window.plugins.gaPlugin;
+    gaPlugin.init(
+        null, /* suppress success */
+        null, /* suppress errors */
+        config.core.ga.account,
+        10 // Seconds between sending stats.
+    );
   });
 
-  var addClass = templateData.menubutton || templateData.homebutton || templateData.backbutton ? "" : "nobuttons";
+  /*
+   * Default handling of generic header triggered by data-header attribute
+   */
+  $(document).on('pagecreate', '[data-role="page"][data-header]', function () {
+    var $this = $(this),
+        headerTemplate = $this.data("header"),
+        headerOptions = $this.data("header-options") || "",
+        optionsArr = headerOptions.split(" ");
 
-  $this.find('[data-role="header"]').remove();
+    var attrs = {
+      "data-theme": "a",
+      "data-role": "header"
+    };
 
-  $('<div></div>').attr(attrs).prependTo(this).html(function () {
-    return JST[headerTemplate](templateData);
-  }).addClass(addClass);
+    var templateData = _.inject(optionsArr, function (memo, option) {
+      memo[option] = true;
+      return memo;
+    }, {
+      title: $this.data('header-title') || ($(document).attr('title') || 'Titel saknas'),
+      backbutton: false,
+      menubutton: false,
+      homebutton: false
+    });
 
-});
+    var addClass = templateData.menubutton || templateData.homebutton || templateData.backbutton ? "" : "nobuttons";
 
-/*
- * Default handling of external link by target=_blank attribute
- */
-$(document).on("click", "a[target=_blank][data-rel!=external]", function (event) {
-  event.preventDefault();
+    $this.find('[data-role="header"]').remove();
 
-  var href = $(this).attr("href");
+    $('<div></div>').attr(attrs).prependTo(this).html(function () {
+      return JST[headerTemplate](templateData);
+    }).addClass(addClass);
 
-  var $externalLinkDialog = $('#external-link-dialog');
-  $externalLinkDialog.remove();
+  });
 
-  $externalLinkDialog = $('<div id="external-link-dialog" data-role="popup" data-theme="a" data-overlay-theme="a"></div>').html(JST["common/external-link-dialog"]({
-    href: href
-  })).appendTo('body');
-
-  $('#external-link-dialog').i18n();
-
-  $externalLinkDialog.find("a[target=_system]").click(function (event) {
+  /*
+   * Default handling of external link by target=_blank attribute
+   */
+  $(document).on("click", "a[target=_blank][data-rel!=external]", function (event) {
     event.preventDefault();
-    window.open(href, '_system');
-    $externalLinkDialog.popup('close');
+
+    var href = $(this).attr("href");
+
+    var $externalLinkDialog = $('#external-link-dialog');
+    $externalLinkDialog.remove();
+
+    $externalLinkDialog = $('<div id="external-link-dialog" data-role="popup" data-theme="a" data-overlay-theme="a"></div>').html(JST["common/external-link-dialog"]({
+      href: href
+    })).appendTo('body');
+
+    $('#external-link-dialog').i18n();
+
+    $externalLinkDialog.find("a[target=_system]").click(function (event) {
+      event.preventDefault();
+      window.open(href, '_system');
+      $externalLinkDialog.popup('close');
+    });
+
+    $externalLinkDialog.popup();
+    $externalLinkDialog.trigger('create');
+    $externalLinkDialog.popup('open');
   });
 
-  $externalLinkDialog.popup();
-  $externalLinkDialog.trigger('create');
-  $externalLinkDialog.popup('open');
-});
+  /*
+   * Handles suppression of 300ms delay on click event
+   */
 
-/*
- * Handles suppression of 300ms delay on click event
- */
-
-$(document).ready(function () {
-  FastClick.attach(document.body);
+  $(document).ready(function () {
+    FastClick.attach(document.body);
+  });
 });

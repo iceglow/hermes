@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-var config = (function (pgBrokerBaseURL) {
+define([], function () {
   return {
     "core": {
       "ga": {
@@ -39,23 +39,23 @@ var config = (function (pgBrokerBaseURL) {
 
     "sukat": {
       "search": {
-        "url": pgBrokerBaseURL + "/sukat/search"
+        "url": "http://mobileapp-dev.it.su.se/sukat/search"
       }
     },
 
     "map": {
       "campuses": {
-        "url": pgBrokerBaseURL + "/geo/campuses"
+        "url": "http://mobileapp-dev.it.su.se/geo/campuses"
       },
       "location": {
-        "url": pgBrokerBaseURL + "/geo/poi"
+        "url": "http://mobileapp-dev.it.su.se/geo/poi"
       },
       "icon": {
-        "urlPrefix": pgBrokerBaseURL + "/image/view"
+        "urlPrefix": "http://mobileapp-dev.it.su.se/image/view"
       },
       "zoom": {
         "threshold": 16
       }
     }
   };
-})("http://mobileapp-dev.it.su.se");
+});

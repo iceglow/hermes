@@ -38,10 +38,10 @@
  * @type {Backbone.Collection}
  */
 define([
+  'config',
   'backbone',
-  'map/js/models/campus-model',
-  'config'
-], function (Backbone, Campus) {
+  'map/js/models/campus-model'
+], function (config, Backbone, Campus) {
   return Backbone.Collection.extend(
       /** @lends Campuses */
       {

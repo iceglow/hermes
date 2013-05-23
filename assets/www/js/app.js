@@ -33,8 +33,8 @@ require.config({
   baseUrl: window.location.href.match(/(.*\/www)\/.*/)[1],
   paths: {
     // Dependencies
-    async: 'js/lib/requirejs-plugins-1.0.1/async',
-    goog: 'js/lib/requirejs-plugins-1.0.1/goog',
+    async: 'js/lib/requirejs-plugins-1.0.1/async.min',
+    goog: 'js/lib/requirejs-plugins-1.0.1/goog.min',
     jquery: 'js/lib/jquery-1.8.2.min',
     jquery_mobile: 'js/lib/jquery.mobile-1.3.1.min',
     jquery_mobile_config: 'js/jquery.mobile-config',
@@ -46,8 +46,8 @@ require.config({
     backbone: 'js/lib/backbone-1.0.0-min',
     i18n: 'js/lib/i18next-1.6.2.min',
     fastclick: 'js/lib/fastclick/fastclick.min',
-    locale: 'js/locale',
     config: 'js/config',
+    locale: 'js/locale',
     common: 'js/jst/common',
     defaults: 'js/default',
 
@@ -76,9 +76,6 @@ require.config({
     common: {
       deps: ['underscore']
     },
-    defaults: {
-      deps: ['jquery', 'common', 'fastclick']
-    },
     jquery_mobile: {
       deps: ['jquery', 'defaults', 'jquery_mobile_config']
     },
@@ -96,6 +93,7 @@ require.config({
 require([
   'backbone',
   'js/routers/core-router',
+  'defaults'
 ], function (Backbone, CoreRouter) {
   $(document).ready(function () {
     var router = new CoreRouter();
