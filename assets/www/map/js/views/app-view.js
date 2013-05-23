@@ -43,10 +43,11 @@ define([
   'map/js/models/map-model',
   'map/js/views/map-view',
   'map/js/views/search-view',
+  'map/js/views/menu-popup-view',
   'config',
   'jquery_mobile',
   'locale'
-], function (Backbone, MapModel, MapView, SearchView) {
+], function (Backbone, MapModel, MapView, SearchView, MenuPopupView) {
   return Backbone.View.extend(
       /** @lends AppView */
       {
