@@ -106,15 +106,13 @@ define([
         open: function (model, anchor, latlng) {
           this.close(); // close previous infowindow
 
-          //translate info window body by altering var text
-          var text = this.getLanguageKey();
-
-          var tOptions = {
-            name: model.getName(),
-            displayDirections: model.get('directionAware'),
-            model: model,
-            itemText: model.get(text)
-          };
+        var itemName = model.getI18n('name') + (model.has('buildingName') ? (", " + model.get('buildingName')) : '');
+        var tOptions = {
+          name: itemName,
+          displayDirections: model.get('directionAware'),
+          model: model,
+          itemText: model.getI18n('text')
+        };
 
           if (model.get('type') === 'building') {
             var hasElevators = this.appModel.locations.byBuildingAndTypeAndHandicapAdapted(
@@ -166,25 +164,8 @@ define([
             self.appModel.showNonVisibleForLocationByRelation(null);
           });
 
-          this.updateRelatedLinks(model);
-
-        },
-
-        getLanguageKey: function () {
-          var text = "textEn";
-          if (this.getRootLanguage() === 'sv') {
-            text = 'text';
-          } else {
-            text = 'textEn';
-          }
-          return text;
-        },
-
-        getRootLanguage: function () {
-          language = navigator.language.split("-");
-          rootLanguage = (language[0]);
-          return rootLanguage;
-        },
+        this.updateRelatedLinks(model);
+      },
 
         /**
          * Updates links for showing related locations in the infowindow given the location that related is shown for

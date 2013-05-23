@@ -164,13 +164,13 @@ define([
           this.collection.trigger("reset");
         },
 
-        populateFilter: function () {
-          var html = this.collection.bySearchable().reduce(function (memo, location) {
-            //TODO: Use JST
-            return memo + '<li id="' + location.get('id') + '" data-icon="false">' +
-                '<a data-modelid="' + location.get('id') + '" class="autocomplete-link">' + location.get('name') + '</a>' +
-                '</li>';
-          }, "");
+      populateFilter: function () {
+        var html = this.collection.bySearchable().reduce(function (memo, location) {
+          //TODO: Use JST
+          return memo + '<li id="' + location.get('id') + '" data-icon="false">' +
+              '<a data-modelid="' + location.get('id') + '" class="autocomplete-link">' + location.getI18n('name') + '</a>' +
+              '</li>';
+        }, "");
 
           var $ul = $('#search-autocomplete');
           $ul.hide();

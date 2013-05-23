@@ -38,19 +38,22 @@
  */
 define([
   'backbone',
+  'map/js/models/model-mixins',
   'config',
   'async!http://maps.google.com/maps/api/js?key=AIzaSyDj0Ddh5c4FOvG3NgxFFBwuOZB-8E1pNbo&sensor=true!callback'
-], function (Backbone) {
+], function (Backbone, ModelMixins) {
   return Backbone.Model.extend(
       /** @lends Location */
       {
         defaults: {
           id: 0,
           name: 'unknown',
+          nameEn: null,
           campus: 'unknown',
           type: 'unknown',
           shape: "point",
           text: "",
+          textEn: "",
           coords: [],
           directionAware: true,
           hasIcon: false,
@@ -92,21 +95,6 @@ define([
         },
 
         /**
-         * The name for this model.
-         *
-         * @returns the name.
-         */
-        getName: function () {
-          var name = this.get('name');
-
-          if (this.has('buildingName')) {
-            name += ", " + this.get('buildingName');
-          }
-
-          return name;
-        },
-
-        /**
          * Checks if the location is visible on the map.
          *
          * @return true if visible, false if not.
@@ -114,5 +102,5 @@ define([
         isVisible: function () {
           return this.get('visible');
         }
-      });
+      }).extend(ModelMixins.i18nMixin);
 });

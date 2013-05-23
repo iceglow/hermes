@@ -29,42 +29,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * Representation of a campus on the map.
- *
- * @class Backbone model represenbting a campus.
- * @author <a href="mailto:joakim.lundin@su.se">Joakim Lundin</a>
- * @author <a href="mailto:lucien.bokouka@su.se">Lucien Bokouka</a>
- * @type {Backbone.Model}
- */
 define([
-  'backbone',
-  'map/js/models/model-mixins',
-  'config'
-], function (Backbone, ModelMixins) {
-  return Backbone.Model.extend(
-      /** @lends Campus */
-      {
-        /**
-         * Defaults for this model
-         */
-        defaults: {
-          "id": 0,
-          "name": 'Unknown',
-          "coords": [59.363317, 18.0592], // Default to Frescati campus.
-          "zoom": 15
-        },
+  'i18n'
+], function () {
+  ModelMixins = {};
 
-        getLat: function () {
-          return this.get('coords')[0];
-        },
+  ModelMixins.i18nMixin = {
 
-        getLng: function () {
-          return this.get('coords')[1];
-        },
+  /**
+   * Gets the translated attribute value given the current locale
+   * If language is other than swedish the english translation will be used if it exists
+   *
+   * @param attribute
+   * @returns translated value for the attribute.
+   */
+  getI18n: function (attribute) {
+    var lang = i18n.options.lng.substring(0,2);
+    var value = this.get(attribute + (lang !== 'sv' ? 'En' : ''))
+    return (value && value !== '') ? value : this.get(attribute)
+  }
+};
 
-        getZoom: function () {
-          return this.get('zoom');
-        }
-      }).extend(ModelMixins.i18nMixin);
+  return ModelMixins;
 });
