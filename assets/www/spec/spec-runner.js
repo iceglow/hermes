@@ -140,6 +140,7 @@ require([
   var specs = [];
   specs.push('spec/default.spec');
   specs.push('spec/i18n.spec');
+  specs.push('spec/modules/start/start-view.spec');
   specs.push('spec/modules/info/info-view.spec');
 
   $(function () {
