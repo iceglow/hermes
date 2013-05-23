@@ -29,11 +29,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-window.plugins = {
-  gaPlugin: {
-    init: function () {
-    },
-    trackPage: function () {
+define([], function () {
+  window.plugins = {
+    gaPlugin: {
+      init: function () {
+      },
+      trackPage: function () {
+      }
     }
-  }
-};
+  };
+});
