@@ -40,12 +40,13 @@
 define([
   'backbone',
   'map/js/views/info-window-view',
+  'map/js/views/point-location-view',
   'config',
   'jquery_mobile',
   'async!http://maps.google.com/maps/api/js?key=AIzaSyDj0Ddh5c4FOvG3NgxFFBwuOZB-8E1pNbo&sensor=true!callback',
   'jquery_ui_map',
   'locale'
-], function (Backbone, InfoWindowView) {
+], function (Backbone, InfoWindowView, PointLocationView) {
   return Backbone.View.extend(
       /** @lends MapView */
       {

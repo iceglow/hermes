@@ -36,59 +36,65 @@
  * @author <a href="mailto:joakim.lundin@su.se">Joakim Lundin</a>
  * @type {Backbone.View}
  */
-var PointLocationView = GenericLocationView.extend(
-    /** @lends PointLocationView */
-    {
+define([
+  'config',
+  'map/js/views/generic-location-view',
+  'async!http://maps.google.com/maps/api/js?key=AIzaSyDj0Ddh5c4FOvG3NgxFFBwuOZB-8E1pNbo&sensor=true!callback'
+], function (config, GenericLocationView) {
+  return GenericLocationView.extend(
+      /** @lends PointLocationView */
+      {
 
-      /**
-       * @constructs
-       * @param options options for this view.
-       */
-      initialize: function (options) {
-        _.bindAll(this, 'getPosition', 'updatePosition');
+        /**
+         * @constructs
+         * @param options options for this view.
+         */
+        initialize: function (options) {
+          _.bindAll(this, 'getPosition', 'updatePosition');
 
-        var pin = options.model.get('pin');
-        var position = this.getPosition(options);
+          var pin = options.model.get('pin');
+          var position = this.getPosition(options);
 
-        // if the model contains customised icon, show it instead of the default one.
-        if (options.model.get('hasIcon')) {
-          var locationId = options.model.get('id');
-          pin = new google.maps.MarkerImage(
-              config.map.icon.urlPrefix + "/" + locationId,
-              new google.maps.Size(22, 22));
+          // if the model contains customised icon, show it instead of the default one.
+          if (options.model.get('hasIcon')) {
+            var locationId = options.model.get('id');
+            pin = new google.maps.MarkerImage(
+                config.map.icon.urlPrefix + "/" + locationId,
+                new google.maps.Size(22, 22));
+          }
+
+          this.marker = new google.maps.Marker({
+            position: position,
+            poiType: options.model.getPoiType(),
+            visible: true,
+            icon: pin,
+            map: null
+          });
+
+          this.constructor.__super__.initialize.apply(this, [options]);
+        },
+
+        /**
+         * getPosition checks if the default position stored in the model is overridden
+         * by the customizedPosition parameter. If it is it the customizedPosition, else
+         * use the location stored in the model.
+         */
+        getPosition: function (options) {
+          var position;
+          if (options && options.customizedPosition) {
+            position = options.customizedPosition;
+          } else {
+            position = _.flatten(this.model.getGPoints())[0];
+          }
+
+          return position;
+        },
+
+        /**
+         * Update position on the map.
+         */
+        updatePosition: function () {
+          this.marker.setPosition(_.flatten(this.model.getGPoints())[0]);
         }
-
-        this.marker = new google.maps.Marker({
-          position: position,
-          poiType: options.model.getPoiType(),
-          visible: true,
-          icon: pin,
-          map: null
-        });
-
-        this.constructor.__super__.initialize.apply(this, [options]);
-      },
-
-      /**
-       * getPosition checks if the default position stored in the model is overridden
-       * by the customizedPosition parameter. If it is it the customizedPosition, else
-       * use the location stored in the model.
-       */
-      getPosition: function (options) {
-        var position;
-        if (options && options.customizedPosition) {
-          position = options.customizedPosition;
-        } else {
-          position = _.flatten(this.model.getGPoints())[0];
-        }
-
-        return position;
-      },
-
-      /**
-       * Update position on the map.
-       */
-      updatePosition: function () {
-        this.marker.setPosition(_.flatten(this.model.getGPoints())[0]);
-      }
-    });
+      });
+});
