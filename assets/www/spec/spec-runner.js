@@ -139,8 +139,10 @@ require([
   specs.push('spec/modules/info/info-view.spec');
   specs.push('spec/modules/student/student-service-view.spec');
   specs.push('spec/modules/map/app-model.spec');
+  specs.push('spec/modules/map/map-model.spec');
   specs.push('spec/modules/map/campus-model.spec');
   specs.push('spec/modules/map/location-model.spec');
+  specs.push('spec/modules/map/model-mixins.spec');
 
   $(function () {
     require(specs, function () {

@@ -29,47 +29,52 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-describe('Model mixin i18nMixin', function () {
+define([
+  'map/js/models/model-mixins',
+  'i18n'
+], function (ModelMixins) {
+  describe('Model mixin i18nMixin', function () {
 
-  beforeEach(function () {
-    this.mixin = {
-      get: function (attribute) {
-        return {
-          name: 'valueSE',
-          nameEn: 'valueEN',
-          test: 'TestSE'
-        }[attribute]
-      }
-    };
-    _.extend(this.mixin, ModelMixins.i18nMixin);
-  });
-
-  it('Should get swedish attribute', function () {
-    i18n.init({
-      lng: 'sv-SE'
+    beforeEach(function () {
+      this.mixin = {
+        get: function (attribute) {
+          return {
+            name: 'valueSE',
+            nameEn: 'valueEN',
+            test: 'TestSE'
+          }[attribute]
+        }
+      };
+      _.extend(this.mixin, ModelMixins.i18nMixin);
     });
-    expect(this.mixin.getI18n('name')).toBe('valueSE');
-  });
 
-  it('Should get english attribute', function () {
-    i18n.init({
-      lng: 'en-GB'
+    it('Should get swedish attribute', function () {
+      i18n.init({
+        lng: 'sv-SE'
+      });
+      expect(this.mixin.getI18n('name')).toBe('valueSE');
     });
-    expect(this.mixin.getI18n('name')).toBe('valueEN');
-  });
 
-  it('Should get english attribute when language is french', function () {
-    i18n.init({
-      lng: 'fr-FR'
+    it('Should get english attribute', function () {
+      i18n.init({
+        lng: 'en-GB'
+      });
+      expect(this.mixin.getI18n('name')).toBe('valueEN');
     });
-    expect(this.mixin.getI18n('name')).toBe('valueEN');
-  });
 
-  it('Should fall back to swedish if no english translation is found', function () {
-    i18n.init({
-      lng: 'en-GB'
+    it('Should get english attribute when language is french', function () {
+      i18n.init({
+        lng: 'fr-FR'
+      });
+      expect(this.mixin.getI18n('name')).toBe('valueEN');
     });
-    expect(this.mixin.getI18n('test')).toBe('TestSE');
-  });
 
+    it('Should fall back to swedish if no english translation is found', function () {
+      i18n.init({
+        lng: 'en-GB'
+      });
+      expect(this.mixin.getI18n('test')).toBe('TestSE');
+    });
+
+  });
 });
