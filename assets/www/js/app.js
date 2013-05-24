@@ -38,9 +38,6 @@ require.config({
     jquery: 'js/lib/jquery-1.8.2.min',
     jquery_mobile: 'js/lib/jquery.mobile-1.3.1.min',
     jquery_mobile_config: 'js/jquery.mobile-config',
-    jquery_ui_map: 'map/js/lib/jquery.ui.map/jquery.ui.map.min',
-//    jquery_ui_map_overlays: 'map/js/lib/jquery.ui.map/jquery.ui.map.overlays.min',
-//    jquery_ui_map_services: 'map/js/lib/jquery.ui.map/jquery.ui.map.services.min',
     //google_maps_api: 'async!http://maps.google.com/maps/api/js?key=AIzaSyDj0Ddh5c4FOvG3NgxFFBwuOZB-8E1pNbo&sensor=true!callback',
     underscore: 'js/lib/underscore-1.4.4-min',
     backbone: 'js/lib/backbone-1.0.0-min',
@@ -57,7 +54,7 @@ require.config({
     service: window.location.href.match(/(.*\/www)\/.*/)[1] + '/studentservice',
     info: window.location.href.match(/(.*\/www)\/.*/)[1] + '/info'
   },
-  priority: ['jquery', 'jquery_ui_map', 'jquery_mobile', 'jquery_mobile_config', 'underscore', 'backbone', 'i18n'],
+  priority: ['jquery', 'jquery_mobile', 'jquery_mobile_config', 'underscore', 'backbone', 'i18n'],
   shim: {
     underscore: {
       exports: "_"
@@ -81,11 +78,6 @@ require.config({
     },
     jquery_mobile_config: {
       deps: ['jquery']
-    },
-    jquery_ui_map: {
-      deps: ['jquery',
-        'async!http://maps.google.com/maps/api/js?key=AIzaSyDj0Ddh5c4FOvG3NgxFFBwuOZB-8E1pNbo&sensor=true!callback'
-      ]
     }
   }
 });

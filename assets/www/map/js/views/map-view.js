@@ -46,7 +46,6 @@ define([
   'config',
   'jquery_mobile',
   'async!http://maps.google.com/maps/api/js?key=AIzaSyDj0Ddh5c4FOvG3NgxFFBwuOZB-8E1pNbo&sensor=true!callback',
-  'jquery_ui_map',
   'locale'
 ], function (Backbone, InfoWindowView, PointLocationView, LineLocationView, PolygonLocationView) {
   return Backbone.View.extend(
@@ -100,18 +99,18 @@ define([
             ]
           };
 
-        // Add the Google Map to the page
-        this.map = new google.maps.Map(this.el, myOptions);
+          // Add the Google Map to the page
+          this.map = new google.maps.Map(this.el, myOptions);
 
-        var self = this;
-        google.maps.event.addListener(this.map, 'zoom_changed', function () {
-          self.trigger('zoom_changed', self.map.getZoom());
-        });
-        this.on('updateCurrentPosition', this.updateCurrentPosition);
-        this.model.on('change:mapPosition', this.updateMapPosition, this);
-        this.model.on('change:zoom', this.updateMapZoom, this);
-        $(window).on("resize.mapview", _.bind(this.resize, this));
-      },
+          var self = this;
+          google.maps.event.addListener(this.map, 'zoom_changed', function () {
+            self.trigger('zoom_changed', self.map.getZoom());
+          });
+          this.on('updateCurrentPosition', this.updateCurrentPosition);
+          this.model.on('change:mapPosition', this.updateMapPosition, this);
+          this.model.on('change:zoom', this.updateMapZoom, this);
+          $(window).on("resize.mapview", _.bind(this.resize, this));
+        },
 
         /**
          * Remove handler for the view.
@@ -315,24 +314,24 @@ define([
             travMode = google.maps.DirectionsTravelMode.TRANSIT;
           }
 
-        var directionsService = new google.maps.DirectionsService();
-        var directionsDisplay = new google.maps.DirectionsRenderer();
-        directionsDisplay.setMap(this.map);
+          var directionsService = new google.maps.DirectionsService();
+          var directionsDisplay = new google.maps.DirectionsRenderer();
+          directionsDisplay.setMap(this.map);
 
-        if (directionsDisplay) {
-          directionsDisplay.setPanel(document.getElementById("dir_panel"));
-        }
-
-        var request = {
-          origin: orig,
-          destination: destination,
-          travelMode: travMode
-        };
-        directionsService.route(request, function (result, status) {
-          if (status == google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(result);
+          if (directionsDisplay) {
+            directionsDisplay.setPanel(document.getElementById("dir_panel"));
           }
-        });
-      }
-    });
+
+          var request = {
+            origin: orig,
+            destination: destination,
+            travelMode: travMode
+          };
+          directionsService.route(request, function (result, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+              directionsDisplay.setDirections(result);
+            }
+          });
+        }
+      });
 });
