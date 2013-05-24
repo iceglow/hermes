@@ -50,9 +50,6 @@ define([], function () {
       "location": {
         "url": "http://mobileapp-dev.it.su.se/geo/poi"
       },
-      "icon": {
-        "urlPrefix": "http://mobileapp-dev.it.su.se/image/view"
-      },
       "zoom": {
         "threshold": 16
       }

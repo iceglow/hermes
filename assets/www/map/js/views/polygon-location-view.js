@@ -53,17 +53,17 @@ define([
         initialize: function (options) {
           this.points = options.model.getGPoints();
 
-          this.marker = new google.maps.Polygon({
-            strokeColor: "#000000",
-            strokeOpacity: 0.8,
-            strokeWeight: 3,
-            fillColor: "#00ff00",
-            fillOpacity: 0.35,
-            visible: true,
-            poiType: options.model.getPoiType(),
-            map: null,
-            paths: this.points
-          });
+        this.marker = new google.maps.Polygon({
+          strokeColor: "#002F5F",
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: "#A1D8E0",
+          fillOpacity: 0.35,
+          visible: true,
+          poiType: options.model.getPoiType(),
+          map: null,
+          paths: this.points
+        });
 
           this.constructor.__super__.initialize.apply(this, [options]);
         },

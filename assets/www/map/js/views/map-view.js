@@ -177,24 +177,24 @@ define([
           });
         },
 
-        /**
-         * Displays a fading message box on top of the map.
-         *
-         * @param locMsg The message to put in the box.
-         */
-        fadingMsg: function (locMsg) {
-          $("<div style='pointer-events: none;'><div class='ui-overlay-shadow ui-body-e ui-corner-all fading-msg'>" + locMsg + "</div></div>")
-              .css({
-                "position": "fixed",
-                "opacity": 0.9,
-                "top": $(window).scrollTop() + 100,
-                "width": "100%"
-              })
-              .appendTo($.mobile.pageContainer)
-              .delay(2200)
-              .fadeOut(1000, function () {
-                $(this).remove();
-              });
+        createPositionMarker: function () {
+          var currentPosition = new Location({
+            id: -100,
+            campus: null,
+            type: 'current_position',
+            name: i18n.t("map.current_position.name", { lng: "sv" }),
+            nameEn: i18n.t("map.current_position.name", { lng: "en" }),
+            coords: [
+              [this.model.get('location').lat(), this.model.get('location').lng()]
+            ],
+            directionAware: false
+          });
+
+          this.currentPositionPoint = new PointLocationView({
+            model: currentPosition,
+            gmap: this.map,
+            infoWindow: this.infoWindowView
+          });
         },
 
         handleZoomChanged: function () {
@@ -277,7 +277,7 @@ define([
             }
 
             // if the polygon has an icon, draw it
-            if (item.get('hasIcon') && (shape === "line" || shape === "polygon")) {
+            if (item.getPin() != null && (shape === "line" || shape === "polygon")) {
               var iconPoint = new PointLocationView({
                 model: item,
                 gmap: self.map,

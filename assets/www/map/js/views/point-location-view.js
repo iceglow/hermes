@@ -52,16 +52,8 @@ define([
         initialize: function (options) {
           _.bindAll(this, 'getPosition', 'updatePosition');
 
-          var pin = options.model.get('pin');
-          var position = this.getPosition(options);
-
-          // if the model contains customised icon, show it instead of the default one.
-          if (options.model.get('hasIcon')) {
-            var locationId = options.model.get('id');
-            pin = new google.maps.MarkerImage(
-                config.map.icon.urlPrefix + "/" + locationId,
-                new google.maps.Size(22, 22));
-          }
+        var pin = options.model.getPin();
+        var position = this.getPosition(options);
 
           this.marker = new google.maps.Marker({
             position: position,
