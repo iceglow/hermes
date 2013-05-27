@@ -149,6 +149,7 @@ require([
   specs.push('spec/modules/map/app-view.spec');
   specs.push('spec/modules/map/map-view.spec');
   specs.push('spec/modules/map/search-view.spec');
+  specs.push('spec/modules/map/generic-location-view.spec');
 
   $(function () {
     require(specs, function () {
