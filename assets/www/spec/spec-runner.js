@@ -149,6 +149,7 @@ require([
   specs.push('spec/modules/map/app-view.spec');
   specs.push('spec/modules/map/map-view.spec');
   specs.push('spec/modules/map/search-view.spec');
+  specs.push('spec/modules/map/menu-popup-view.spec');
   specs.push('spec/modules/map/generic-location-view.spec');
   specs.push('spec/modules/map/point-location-view.spec');
   specs.push('spec/modules/map/line-location-view.spec');
