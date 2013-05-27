@@ -88,6 +88,9 @@ require.config({
     jquery_mobile: {
       deps: ['jquery', 'jquery_mobile_config']
     },
+    jquery_mobile_config: {
+      deps: ['jquery']
+    },
     jasmine: {
       exports: 'jasmine'
     },
@@ -145,6 +148,7 @@ require([
   specs.push('spec/modules/map/model-mixins.spec');
   specs.push('spec/modules/map/app-view.spec');
   specs.push('spec/modules/map/map-view.spec');
+  specs.push('spec/modules/map/search-view.spec');
 
   $(function () {
     require(specs, function () {
