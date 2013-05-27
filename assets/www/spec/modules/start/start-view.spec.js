@@ -33,11 +33,12 @@
  * Tests for the StartView
  */
 define([
+  'config',
   'backbone',
   'core/js/views/start-view',
   'spec/mocks/plugin-mocks',
   'spec/mocks/navigator-mocks'
-], function (Backbone, StartView) {
+], function (config, Backbone, StartView) {
   describe('Start view', function () {
     beforeEach(function () {
       $('#stage').append("<a id='sisulink' href='http://sisu.it.su.se'>sisu</a>");
@@ -46,11 +47,23 @@ define([
 
     describe('on deviceready event', function () {
       it('should hide splash screen', function () {
-        spyOn(navigator.splashscreen, 'hide');
+        runs(function () {
+          spyOn(navigator.splashscreen, 'hide');
+          config.core.splashscreen.timeout = 1;
+          $(document).trigger('deviceready');
+        });
 
-        $(document).trigger('deviceready');
+        var done = false;
+        window.setTimeout(function () {
+          done = true
+        }, 10);
+        waitsFor(function () {
+          return done
+        });
 
-        expect(navigator.splashscreen.hide).toHaveBeenCalled();
+        runs(function () {
+          expect(navigator.splashscreen.hide).toHaveBeenCalled();
+        });
       });
     });
 
@@ -64,9 +77,9 @@ define([
       });
     });
 
-    describe('on off event', function () {
-      it('should remove handler for the view', function () {
-        spyOn(Backbone.View.prototype, 'remove');
+  describe('on off event', function () {
+    it('should remove handler for the view', function () {
+      spyOn(Backbone.View.prototype, 'remove');
 
         $(document).trigger('deviceready');
 

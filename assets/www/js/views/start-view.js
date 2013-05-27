@@ -30,10 +30,11 @@
  */
 
 define([
+  'config',
   'backbone',
   'jquery_mobile',
   'locale'
-], function (Backbone) {
+], function (config, Backbone) {
   return Backbone.View.extend({
 
     initialize: function () {
@@ -61,7 +62,7 @@ define([
      * Handles the device ready event.
      */
     handleDeviceReady: function () {
-      navigator.splashscreen.hide();
+      window.setTimeout(navigator.splashscreen.hide, config.core.splashscreen.timeout);
       gaPlugin.trackPage(null, null, "index.html");
     },
 
