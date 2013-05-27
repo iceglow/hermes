@@ -39,7 +39,7 @@
  */
 define([
   'backbone',
-  'config',
+  'map/js/jst/info-window',
   'async!http://maps.google.com/maps/api/js?key=AIzaSyDj0Ddh5c4FOvG3NgxFFBwuOZB-8E1pNbo&sensor=true!callback'
 ], function (Backbone) {
   return Backbone.View.extend(
@@ -106,13 +106,13 @@ define([
         open: function (model, anchor, latlng) {
           this.close(); // close previous infowindow
 
-        var itemName = model.getI18n('name') + (model.has('buildingName') ? (", " + model.get('buildingName')) : '');
-        var tOptions = {
-          name: itemName,
-          displayDirections: model.get('directionAware'),
-          model: model,
-          itemText: model.getI18n('text')
-        };
+          var itemName = model.getI18n('name') + (model.has('buildingName') ? (", " + model.get('buildingName')) : '');
+          var tOptions = {
+            name: itemName,
+            displayDirections: model.get('directionAware'),
+            model: model,
+            itemText: model.getI18n('text')
+          };
 
           if (model.get('type') === 'building') {
             var hasElevators = this.appModel.locations.byBuildingAndTypeAndHandicapAdapted(
@@ -164,8 +164,8 @@ define([
             self.appModel.showNonVisibleForLocationByRelation(null);
           });
 
-        this.updateRelatedLinks(model);
-      },
+          this.updateRelatedLinks(model);
+        },
 
         /**
          * Updates links for showing related locations in the infowindow given the location that related is shown for
