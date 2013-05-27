@@ -43,11 +43,12 @@ define([
   'map/js/views/point-location-view',
   'map/js/views/line-location-view',
   'map/js/views/polygon-location-view',
+  'map/js/models/location-model',
   'config',
   'jquery_mobile',
   'async!http://maps.google.com/maps/api/js?key=AIzaSyDj0Ddh5c4FOvG3NgxFFBwuOZB-8E1pNbo&sensor=true!callback',
   'locale'
-], function (Backbone, InfoWindowView, PointLocationView, LineLocationView, PolygonLocationView) {
+], function (Backbone, InfoWindowView, PointLocationView, LineLocationView, PolygonLocationView, Location) {
   return Backbone.View.extend(
       /** @lends MapView */
       {

@@ -144,6 +144,7 @@ require([
   specs.push('spec/modules/map/location-model.spec');
   specs.push('spec/modules/map/model-mixins.spec');
   specs.push('spec/modules/map/app-view.spec');
+  specs.push('spec/modules/map/map-view.spec');
 
   $(function () {
     require(specs, function () {

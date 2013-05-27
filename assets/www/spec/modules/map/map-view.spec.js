@@ -29,50 +29,34 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-describe('Map view', function () {
-  beforeEach(function () {
-    var html = "<div data-role='page' id='page-map' style='width:200px; height:200px'>" +
-        "<div id='search-box' class='ui-mini'>" +
-        "<ul id='search-autocomplete' " +
-        "data-role='listview' " +
-        "data-theme='a' " +
-        "data-filter-theme='a' " +
-        "data-mini='true' " +
-        "data-filter-mini='true' " +
-        "data-filter='true' " +
-        "data-filter-placeholder='Enter search string' " +
-        "data-autodividers='true' " +
-        "data-inset= 'true'>" +
-        "</ul>" +
-        "</div>" +
-        "<div id='map_canvas'></div>" +
-        "</div>";
-
-    $('#stage').replaceWith(html);
-    $.mobile.loadPage("#page-map", {prefetch: "true"});
-
-    this.view = new MapView({
-      el: $('#map_canvas'),
-      model: new MapModel(),
-      appModel: new AppModel()
-    });
-  });
-
-  afterEach(function () {
-    $('#page-map').replaceWith("<div id='stage'></div>");
-  });
-
-  describe('instantiation', function () {
-    it('should create a div of #map_canvas', function () {
-      expect(this.view.el.nodeName).toEqual("DIV");
-      expect(this.view.el.id).toEqual("map_canvas");
-    });
-  });
-
-  describe('resize', function () {
+define([
+  'map/js/views/map-view',
+  'map/js/models/app-model',
+  'map/js/models/map-model',
+  'fixtures'
+], function (MapView, AppModel, MapModel) {
+  describe('Map view', function () {
     beforeEach(function () {
-      // We need to create a new view since we need to attach the spy first
-      spyOn(MapView.prototype, 'resize');
+      var html = "<div data-role='page' id='page-map' style='width:200px; height:200px'>" +
+          "<div id='search-box' class='ui-mini'>" +
+          "<ul id='search-autocomplete' " +
+          "data-role='listview' " +
+          "data-theme='a' " +
+          "data-filter-theme='a' " +
+          "data-mini='true' " +
+          "data-filter-mini='true' " +
+          "data-filter='true' " +
+          "data-filter-placeholder='Enter search string' " +
+          "data-autodividers='true' " +
+          "data-inset= 'true'>" +
+          "</ul>" +
+          "</div>" +
+          "<div id='map_canvas'></div>" +
+          "</div>";
+
+      $('#stage').replaceWith(html);
+      $.mobile.loadPage("#page-map", {prefetch: "true"});
+
       this.view = new MapView({
         el: $('#map_canvas'),
         model: new MapModel(),
@@ -80,33 +64,56 @@ describe('Map view', function () {
       });
     });
 
-    it('should react to window resize events', function () {
-      $(document).trigger('resize');
-      expect(MapView.prototype.resize.calls.length).toBe(1);
+    afterEach(function () {
+      $('#page-map').replaceWith("<div id='stage'></div>");
     });
 
-    it('should remove the event handler from document.resize when the view is removed', function () {
-      this.view.remove();
-      $(document).trigger('resize');
-      expect(MapView.prototype.resize.calls.length).toBe(0);
+    describe('instantiation', function () {
+      it('should create a div of #map_canvas', function () {
+        expect(this.view.el.nodeName).toEqual("DIV");
+        expect(this.view.el.id).toEqual("map_canvas");
+      });
     });
-  });
 
-  describe('getDirections', function () {
-    it('should use origin from current position', function () {
-      this.view.createPositionMarker();
-      spyOn(this.view.currentPositionPoint, 'getPosition').andCallFake(function () {
-        return 'foobar';
+    describe('resize', function () {
+      beforeEach(function () {
+        // We need to create a new view since we need to attach the spy first
+        spyOn(MapView.prototype, 'resize');
+        this.view = new MapView({
+          el: $('#map_canvas'),
+          model: new MapModel(),
+          appModel: new AppModel()
+        });
       });
 
-      var origOk = false;
-      this.view.$el.gmap = function (command, options) {
-        if (options.origin === 'foobar') {
-          origOk = true;
-        }
-      };
+      it('should react to window resize events', function () {
+        $(document).trigger('resize');
+        expect(MapView.prototype.resize.calls.length).toBe(1);
+      });
 
-      this.view.getDirections("walking", 'destination');
+      it('should remove the event handler from document.resize when the view is removed', function () {
+        this.view.remove();
+        $(document).trigger('resize');
+        expect(MapView.prototype.resize.calls.length).toBe(0);
+      });
+    });
+
+    describe('getDirections', function () {
+      it('should use origin from current position', function () {
+        this.view.createPositionMarker();
+        spyOn(this.view.currentPositionPoint, 'getPosition').andCallFake(function () {
+          return 'foobar';
+        });
+
+        var origOk = false;
+        this.view.$el.gmap = function (command, options) {
+          if (options.origin === 'foobar') {
+            origOk = true;
+          }
+        };
+
+        this.view.getDirections("walking", 'destination');
+      });
     });
   });
 });
