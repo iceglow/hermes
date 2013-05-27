@@ -143,6 +143,7 @@ require([
   specs.push('spec/modules/map/campus-model.spec');
   specs.push('spec/modules/map/location-model.spec');
   specs.push('spec/modules/map/model-mixins.spec');
+  specs.push('spec/modules/map/app-view.spec');
 
   $(function () {
     require(specs, function () {
