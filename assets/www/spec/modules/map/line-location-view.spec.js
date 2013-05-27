@@ -29,55 +29,67 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-describe('Line location view', function () {
-  describe('initializing', function () {
+define([
+  'spec/mocks/googlemaps-mocks',
+  'map/js/views/line-location-view',
+  'map/js/views/generic-location-view',
+  'map/js/models/location-model',
+  'fixtures'
+], function (Mocks, LineLocationView, GenericLocationView, Location) {
+  describe('Line location view', function () {
     beforeEach(function () {
-      spyOn(GenericLocationView.prototype, "initialize");
+      Mocks.apply();
     });
 
-    it('should call GenericLocationView.initialize', function () {
-      this.view = new LineLocationView({
-        model: new Location()
+    describe('initializing', function () {
+      beforeEach(function () {
+        spyOn(GenericLocationView.prototype, "initialize");
       });
 
-      expect(GenericLocationView.prototype.initialize).toHaveBeenCalled();
+      it('should call GenericLocationView.initialize', function () {
+        this.view = new LineLocationView({
+          model: new Location()
+        });
+
+        expect(GenericLocationView.prototype.initialize).toHaveBeenCalled();
+      });
+
+      it('should create a google.Maps.Polyline', function () {
+        spyOn(google.maps, 'Polyline');
+
+        this.view = new LineLocationView({
+          model: new Location()
+        });
+
+        expect(google.maps.Polyline).toHaveBeenCalledWith({
+          strokeColor: "#002F5F",
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: "#A1D8E0",
+          fillOpacity: 0.35,
+          visible: true,
+          poiType: this.view.model.getPoiType(),
+          map: null,
+          path: this.view.model.getGPoints()
+        });
+      });
     });
 
-    it('should create a google.Maps.Polyline', function () {
-      spyOn(google.maps, 'Polyline');
-
-      this.view = new LineLocationView({
-        model: new Location()
+    describe('updatePosition', function () {
+      beforeEach(function () {
+        spyOn(GenericLocationView.prototype, "initialize");
       });
 
-      expect(google.maps.Polyline).toHaveBeenCalledWith({
-        strokeColor: "#002F5F",
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: "#A1D8E0",
-        fillOpacity: 0.35,
-        visible: true,
-        poiType: this.view.model.getPoiType(),
-        map: null,
-        path: this.view.model.getGPoints()
+      it('should call marker.setPath', function () {
+        this.view = new LineLocationView({
+          model: new Location()
+        });
+        spyOn(this.view.marker, 'setPath');
+
+        this.view.updatePosition();
+
+        expect(this.view.marker.setPath).toHaveBeenCalledWith(this.view.model.getGPoints());
       });
-    });
-  });
-
-  describe('updatePosition', function () {
-    beforeEach(function () {
-      spyOn(GenericLocationView.prototype, "initialize");
-    });
-
-    it('should call marker.setPath', function () {
-      this.view = new LineLocationView({
-        model: new Location()
-      });
-      spyOn(this.view.marker, 'setPath');
-
-      this.view.updatePosition();
-
-      expect(this.view.marker.setPath).toHaveBeenCalledWith(this.view.model.getGPoints());
     });
   });
 });
