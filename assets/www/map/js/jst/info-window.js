@@ -28,12 +28,14 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+define([
+  'underscore'
+], function (_) {
+  if (!("JST" in window) || "JST" === undefined) {
+    window.JST = {};
+  }
 
-if (!("JST" in window) || "JST" === undefined) {
-  window.JST = {};
-}
-
-JST['map/infoWindow/building'] = _.template(" \
+  JST['map/infoWindow/building'] = _.template(" \
 <br/>\
 <% if (hasElevators === true) { %> \
 <i class='elevator'></i> <%= i18n.t('map.infoWindow.elevator.exists') %> \
@@ -56,7 +58,7 @@ JST['map/infoWindow/building'] = _.template(" \
 <% } %> \
 ");
 
-JST['map/infoWindow'] = _.template(" \
+  JST['map/infoWindow'] = _.template(" \
 <div id='info_window' class='iw'>\
   <h3><%= name %></h3>\
   <% if (itemText != null) { %>\
@@ -95,3 +97,4 @@ JST['map/infoWindow'] = _.template(" \
   <% } %> \
 </div> \
 ");
+});

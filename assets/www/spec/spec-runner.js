@@ -62,7 +62,7 @@ require.config({
     core: './',
     map: 'map',
     info: 'info',
-    student: 'student'
+    service: 'studentservice'
   },
   priority: [
     'jasmine',
@@ -138,6 +138,7 @@ require([
   var specs = [];
   specs.push('spec/default.spec');
   specs.push('spec/i18n.spec');
+  specs.push('spec/modules/start/core-router.spec');
   specs.push('spec/modules/start/start-view.spec');
   specs.push('spec/modules/info/info-view.spec');
   specs.push('spec/modules/student/student-service-view.spec');

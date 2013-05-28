@@ -34,7 +34,7 @@
  */
 define([
   'backbone',
-  'studentservice/js/views/student-service-view',
+  'service/js/views/student-service-view',
   'spec/mocks/plugin-mocks'
 ], function (Backbone, StudentView) {
   describe('Student view', function () {
