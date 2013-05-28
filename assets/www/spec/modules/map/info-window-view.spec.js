@@ -253,6 +253,35 @@ define([
 
     });
 
+    it('should use anchor for position when no latlng is passed', function () {
+      this.infoWindow = new InfoWindowView({
+        appModel: new AppModel()
+      });
+
+      spyOn(this.infoWindow.infoWindow, "open");
+
+      var marker = new google.maps.Marker()
+      this.infoWindow.open(new Location(), marker);
+
+      expect(this.infoWindow.infoWindow.open).toHaveBeenCalledWith(marker.getMap(), marker);
+    });
+
+    it('should use passed latlng for position', function () {
+      this.infoWindow = new InfoWindowView({
+        appModel: new AppModel()
+      });
+
+      spyOn(this.infoWindow.infoWindow, "open");
+      spyOn(this.infoWindow.infoWindow, "setPosition");
+
+      var marker = new google.maps.Marker();
+      var latlng = new google.maps.LatLng(0, 0);
+      this.infoWindow.open(new Location(), marker, latlng);
+
+      expect(this.infoWindow.infoWindow.setPosition).toHaveBeenCalledWith(latlng);
+      expect(this.infoWindow.infoWindow.open).toHaveBeenCalledWith(marker.getMap());
+    });
+
     describe('Info-window template', function () {
       it('should set hearing_loop for auditoriums when handicapAdapted', function () {
         // First expect to find no hearing loops
@@ -290,7 +319,7 @@ define([
         }));
 
         expect($('#page-map').find('i[class="hearing_loop"]').size()).toEqual(0);
-        expect($('#page-map').text()).toMatch(/.*Hearing loop not available.*/);
+        expect($('#page-map').text()).toMatch(/.*map.infoWindow.hearing_loop.noexists.*/);
       });
 
       it('should set correct building information when no accessible elevators, toilets or entrances exist', function () {
@@ -310,13 +339,13 @@ define([
         }));
 
         expect($('#page-map').find('i[class="elevator"]').size()).toEqual(0);
-        expect($('#page-map').text()).toMatch(/.*Accessible lift not available.*/);
+        expect($('#page-map').text()).toMatch(/.*map.infoWindow.elevator.noexists.*/);
 
         expect($('#page-map').find('i[class="toilet"]').size()).toEqual(0);
-        expect($('#page-map').text()).toMatch(/.*Accessible toilet not available.*/);
+        expect($('#page-map').text()).toMatch(/.*map.infoWindow.toilet.noexists.*/);
 
         expect($('#page-map').find('i[class="entrance"]').size()).toEqual(0);
-        expect($('#page-map').text()).toMatch(/.*Accessible entrance not available.*/);
+        expect($('#page-map').text()).toMatch(/.*map.infoWindow.entrance.noexists.*/);
       });
 
       it('should set correct building information when accessible elevators, toilets or entrances exist', function () {
@@ -336,18 +365,18 @@ define([
         }));
 
         expect($('#page-map').find('i[class="elevator"]').size()).toEqual(1);
-        expect($('#page-map').text()).toMatch(/.*Accessible lift available.*/);
+        expect($('#page-map').text()).toMatch(/.*map.infoWindow.elevator.exists.*/);
 
         expect($('#page-map').find('i[class="toilet"]').size()).toEqual(1);
-        expect($('#page-map').text()).toMatch(/.*Accessible toilet available.*/);
+        expect($('#page-map').text()).toMatch(/.*map.infoWindow.toilet.exists.*/);
 
         expect($('#page-map').find('i[class="entrance"]').size()).toEqual(1);
 
         expect($('#page-map').find('a[class="showRelated"]').size()).toEqual(1);
-        expect($('#page-map').text()).toMatch(/.*Show accessible entrances.*/);
+        expect($('#page-map').text()).toMatch(/.*map.infoWindow.entrance.show.*/);
 
         expect($('#page-map').find('a[class="hideRelated"]').size()).toEqual(1);
-        expect($('#page-map').text()).toMatch(/.*Hide accessible entrances.*/);
+        expect($('#page-map').text()).toMatch(/.*map.infoWindow.entrance.hide.*/);
       });
     });
   });
