@@ -29,56 +29,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * Tests for the StartView
- */
-define([
-  'config',
-  'backbone',
-  'spec/util/helper',
-  'core/js/views/start-view',
-  'spec/mocks/plugin-mocks',
-  'spec/mocks/navigator-mocks'
-], function (config, Backbone, helper, StartView) {
-  describe('Start view', function () {
-    beforeEach(function () {
-      $('#stage').append("<a id='sisulink' href='http://sisu.it.su.se'>sisu</a>");
-      this.view = new StartView({el: $('#stage')});
-    });
+if (!("JST" in window) || "JST" === undefined) {
+    window.JST = {};
+}
 
-    describe('on deviceready event', function () {
-      it('should hide splash screen', function () {
-        runs(function () {
-          spyOn(navigator.splashscreen, 'hide');
-          config.core.splashscreen.timeout = 1;
-          $(document).trigger('deviceready');
-        });
-
-        helper.delay(10, function () {
-          expect(navigator.splashscreen.hide).toHaveBeenCalled();
-        });
-      });
-    });
-
-    describe('on sisu link click event', function () {
-      it('should call GAPlugin.trackPage', function () {
-        spyOn(window.plugins.gaPlugin, 'trackPage');
-
-        $('#sisulink').trigger('click');
-
-        expect(window.plugins.gaPlugin.trackPage).toHaveBeenCalledWith(null, null, 'http://sisu.it.su.se');
-      });
-    });
-
-  describe('on off event', function () {
-    it('should remove handler for the view', function () {
-      spyOn(Backbone.View.prototype, 'remove');
-
-        $(document).trigger('deviceready');
-
-        this.view.remove();
-        expect(Backbone.View.prototype.remove).toHaveBeenCalled();
-      });
-    });
-  });
-});
+JST['studentservice/menu'] = _.template(" \
+  <li> \
+    <a href='<%= url %>' target='_blank' class='servicelink'> \
+        <span><%= title %></span> \
+        <div class='img-container'> \
+            <img src='../img/icons/icon-external-link.svg' /> \
+        </div> \
+    </a> \
+</li> \
+");

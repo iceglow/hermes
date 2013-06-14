@@ -111,7 +111,34 @@ define([
    * Handles suppression of 300ms delay on click event
    */
 
+  $(document).on("click", ".button-grid a", function (event) {
+    var $targetLink = $(this).attr('href');
+
+    $.ajax({
+      complete: function(){
+        window.location.href = $targetLink;
+      }
+    })
+    return false;
+  });
+
+  /*
+   * Handles suppression of 300ms delay on click event
+   */
   $(document).ready(function () {
     FastClick.attach(document.body);
+
+    $(document).ajaxStart(function() {
+      $.mobile.loading( 'show', {
+        text: '',
+        textVisible: true,
+        theme: 'b',
+        html: ""
+      });
+    });
+
+    $(document).ajaxStop(function() {
+      $.mobile.hidePageLoadingMsg();
+    });
   });
 });

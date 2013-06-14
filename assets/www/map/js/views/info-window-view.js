@@ -106,13 +106,12 @@ define([
         open: function (model, anchor, latlng) {
           this.close(); // close previous infowindow
 
-          var itemName = model.getI18n('name') + (model.has('buildingName') ? (", " + model.get('buildingName')) : '');
-          var tOptions = {
-            name: itemName,
-            displayDirections: model.get('directionAware'),
-            model: model,
-            itemText: model.getI18n('text')
-          };
+        var tOptions = {
+          name: model.getI18n('name'),
+          displayDirections: model.get('directionAware'),
+          model: model,
+          itemText: model.getI18n('text')
+        };
 
           if (model.get('type') === 'building') {
             var hasElevators = this.appModel.locations.byBuildingAndTypeAndHandicapAdapted(

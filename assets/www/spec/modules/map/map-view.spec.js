@@ -30,11 +30,12 @@
  */
 
 define([
+  'spec/util/helper',
   'map/js/views/map-view',
   'map/js/models/app-model',
   'map/js/models/map-model',
   'fixtures'
-], function (MapView, AppModel, MapModel) {
+], function (helper, MapView, AppModel, MapModel) {
   describe('Map view', function () {
     beforeEach(function () {
       var html = "<div data-role='page' id='page-map' style='width:200px; height:200px'>" +
@@ -113,6 +114,28 @@ define([
         };
 
         this.view.getDirections("walking", 'destination');
+      });
+    });
+
+    describe('keyboard', function () {
+      it('keyboardvisible should be false by default', function () {
+        expect(this.view.keyboardVisible).toBeFalsy();
+      });
+
+      it('showkeyboard should set keyboardvisible variable == true', function () {
+        $(document).trigger('showkeyboard');
+
+        expect(this.view.keyboardVisible).toBeTruthy();
+      });
+
+      it('hidekeyboard should set keyboardvisible variable == false', function () {
+        this.view.keyboardVisible = true;
+        $(document).trigger('hidekeyboard');
+
+        var self = this;
+        helper.delay(200, function () {
+          expect(self.view.keyboardVisible).toBeFalsy();
+        });
       });
     });
   });

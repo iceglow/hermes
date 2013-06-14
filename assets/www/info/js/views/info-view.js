@@ -45,6 +45,15 @@ define([
       this.$el.i18n();
     },
 
+    render: function() {
+      this.resizeIcons();
+
+      var self = this;
+      $(window).resize(function() {
+        self.resizeIcons();
+      });
+    },
+
     /**
      * Remove handler for the view.
      */
@@ -59,6 +68,12 @@ define([
      */
     handleDeviceReady: function () {
       gaPlugin.trackPage(null, null, "accessibility/index.html");
+    },
+
+    resizeIcons: function() {
+      var $iconContainers = $('.icon-description');
+      var containerWidth = $iconContainers.width();
+      $iconContainers.css('height', containerWidth);
     }
   });
 });

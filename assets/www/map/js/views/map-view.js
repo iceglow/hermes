@@ -61,17 +61,20 @@ define([
 
         searchHiddenFromToolbar: false,
 
-        /**
-         * @constructs
-         */
-        initialize: function (options) {
-          _.bindAll(this,
-              'render',
-              'updateCurrentPosition',
-              'handleZoomChanged',
-              'removeAllMarkers',
-              'addMarkers'
-          );
+      keyboardVisible: false,
+      resizeTimeout: false,
+
+      /**
+       * @constructs
+       */
+      initialize: function (options) {
+        _.bindAll(this,
+            'render',
+            'updateCurrentPosition',
+            'handleZoomChanged',
+            'removeAllMarkers',
+            'addMarkers'
+        );
 
           this.pointViews = [];
           this.infoWindowView = new InfoWindowView({
@@ -103,21 +106,35 @@ define([
           // Add the Google Map to the page
           this.map = new google.maps.Map(this.el, myOptions);
 
-          var self = this;
-          google.maps.event.addListener(this.map, 'zoom_changed', function () {
-            self.trigger('zoom_changed', self.map.getZoom());
-          });
-          this.on('updateCurrentPosition', this.updateCurrentPosition);
-          this.model.on('change:mapPosition', this.updateMapPosition, this);
-          this.model.on('change:zoom', this.updateMapZoom, this);
-          $(window).on("resize.mapview", _.bind(this.resize, this));
-        },
+        var self = this;
+        google.maps.event.addListener(this.map, 'zoom_changed', function () {
+          self.trigger('zoom_changed', self.map.getZoom());
+        });
+        this.on('updateCurrentPosition', this.updateCurrentPosition);
+        this.model.on('change:mapPosition', this.updateMapPosition, this);
+        this.model.on('change:zoom', this.updateMapZoom, this);
+        $(window).on("resize.mapview", _.bind(this.resize, this));
 
-        /**
-         * Remove handler for the view.
-         */
-        remove: function () {
-          $(window).off(".mapview");
+        // Handle keyboard up event
+        $(document).on('showkeyboard.mapview', function () {
+          self.keyboardVisible = true;
+        });
+
+        // Handle keyboard down event
+        $(document).on('hidekeyboard.mapview', function () {
+          window.setTimeout(function () {
+            self.keyboardVisible = false;
+            self.resize();
+          }, 150);
+        });
+      },
+
+      /**
+       * Remove handler for the view.
+       */
+      remove: function () {
+        $(window).off(".mapview");
+        $(document).off(".mapview");
 
           this.infoWindowView.remove();
           Backbone.View.prototype.remove.call(this);
@@ -146,13 +163,22 @@ define([
           });
         },
 
-        /**
-         * Handler for window resizing.
-         */
-        resize: function () {
-          // Force the height of the map to fit the window
-          $("#map-content").height($(window).height() - $("[data-role='header']").outerHeight() - $("div#search-box").outerHeight() - 2);
-        },
+      /**
+       * Handler for window resizing.
+       */
+      resize: function () {
+        var self = this;
+
+        clearTimeout(this.resizeTimeout);
+
+        this.resizeTimeout = setTimeout(function () {
+          if (!self.keyboardVisible) {
+            // Force the height of the map to fit the window
+            $("#map-content").height($(window).height() - $("[data-role='header']").outerHeight() - $("div#search-box").outerHeight() - 2);
+            google.maps.event.trigger(self.map, 'resize');
+          }
+        }, 150);
+      },
 
         createPositionMarker: function () {
           var currentPosition = new Location({
