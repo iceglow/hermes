@@ -62,6 +62,10 @@
       "name": "You are here!"
     },
 
+    "campusList": {
+      "choosecampus": "Choose campus:"
+    },
+
     "search": {
       "noresults": "No results"
     }
@@ -89,14 +93,33 @@
   },
   "studentService": {
     "menu": {
-      "applicationAndAdmission": "Admission",
-      "degreeAndCertificate": "Degrees",
-      "guidanceCounseling": "Study Counselling",
-      "infoCentre": "Information Centre",
-      "healthService": "Student Health",
-      "studentDisabilityService": "Student Disability Service",
-      "studyAbroad": "Study abroad",
-      "equality": "Equal treatment"
+      "applicationAndAdmission": {
+        "title": "How to Apply"
+      },
+      "degreeAndCertificate": {
+        "title": "Qualifications & Degrees"
+      },
+      "guidanceCounseling": {
+        "title": "Study & Career Counselling"
+      },
+      "infoCentre": {
+          "title": "Infocentre"
+      },
+      "healthService": {
+          "title": "Student Health Service"
+      },
+      "studentDisabilityService": {
+          "title": "Support for Students with Disabilities"
+      },
+      "academicWritingService": {
+          "title": "Academic Writing Service"
+      },
+      "equality": {
+          "title": "Equal Treatment"
+      },
+      "orientation": {
+          "title": "Orientation Week"
+      }
     },
     "header": {
       "title": "Student Service"
