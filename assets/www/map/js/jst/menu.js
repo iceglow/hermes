@@ -29,6 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+define([
+  'underscore'
+], function (_) {
 if (!("JST" in window) || "JST" === undefined) {
   window.JST = {};
 }
@@ -38,3 +41,4 @@ JST['map/menu/button'] = _.template(" \
    class='ui-btn-right menubutton' data-iconshadow='false' data-theme='c'> \
 </a> \
 ");
+});

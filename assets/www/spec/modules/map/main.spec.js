@@ -39,7 +39,7 @@ describe('Main', function () {
 
     it('should create a MapRouter', function () {
       startMapModule();
-      expect(window.MapRouter).toHaveBeenCalled();
+      expect(MapRouter).toHaveBeenCalled();
     });
 
     it('should start Backbone history', function () {

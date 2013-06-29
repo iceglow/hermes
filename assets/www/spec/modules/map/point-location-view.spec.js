@@ -41,77 +41,77 @@ define([
       Mocks.apply();
     });
 
-    describe('initializing', function () {
-      beforeEach(function () {
-        spyOn(GenericLocationView.prototype, "initialize");
-      });
-
-      it('should call GenericLocationView.initialize', function () {
-        this.view = new PointLocationView({
-          model: new Location()
-        });
-
-        expect(GenericLocationView.prototype.initialize).toHaveBeenCalled();
-      });
-
-      it('should create a google.Maps.Point', function () {
-        spyOn(google.maps, 'Marker');
-
-        this.view = new PointLocationView({
-          model: new Location()
-        });
-
-        expect(google.maps.Marker).toHaveBeenCalledWith({
-          position: this.view.getPosition(),
-          poiType: this.view.model.getPoiType(),
-          visible: true,
-          icon: this.view.model.getPin(),
-          map: null
-        });
-      });
+  describe('initializing', function () {
+    beforeEach(function () {
+      spyOn(GenericLocationView.prototype, "initialize");
     });
 
-    describe('updatePosition', function () {
-      beforeEach(function () {
-        spyOn(GenericLocationView.prototype, "initialize");
+    it('should call GenericLocationView.initialize', function () {
+      this.view = new PointLocationView({
+        model: new Location()
       });
 
-      it('should call marker.setPosition', function () {
-        this.view = new PointLocationView({
-          model: new Location()
-        });
-        spyOn(this.view.marker, 'setPosition');
-
-        this.view.updatePosition();
-
-        expect(this.view.marker.setPosition).toHaveBeenCalledWith(this.view.model.getGPoints()[0]);
-      });
+      expect(GenericLocationView.prototype.initialize).toHaveBeenCalled();
     });
 
-    describe('getPosition', function () {
-      beforeEach(function () {
-        spyOn(GenericLocationView.prototype, "initialize");
+    it('should create a google.Maps.Point', function () {
+      spyOn(google.maps, 'Marker');
+
+      this.view = new PointLocationView({
+        model: new Location()
       });
 
-      it('should return value of options.customizedPosition if supplied', function () {
-        this.view = new PointLocationView({
-          model: new Location()
-        });
-
-        var pos = this.view.getPosition({ customizedPosition: 'foo' });
-
-        expect(pos).toEqual('foo');
-      });
-
-      it('should return value of getGPoints if no customizedPosition is supplied', function () {
-        this.view = new PointLocationView({
-          model: new Location()
-        });
-
-        var pos = this.view.getPosition();
-
-        expect(pos).toEqual(this.view.model.getGPoints()[0]);
+      expect(google.maps.Marker).toHaveBeenCalledWith({
+        position: this.view.getPosition(),
+        poiType: this.view.model.getPoiType(),
+        visible: true,
+        icon: this.view.model.getPin(),
+        map: null
       });
     });
   });
+
+  describe('updatePosition', function () {
+    beforeEach(function () {
+      spyOn(GenericLocationView.prototype, "initialize");
+    });
+
+    it('should call marker.setPosition', function () {
+      this.view = new PointLocationView({
+        model: new Location()
+      });
+      spyOn(this.view.marker, 'setPosition');
+
+      this.view.updatePosition();
+
+      expect(this.view.marker.setPosition).toHaveBeenCalledWith(this.view.model.getGPoints()[0]);
+    });
+  });
+
+  describe('getPosition', function () {
+    beforeEach(function () {
+      spyOn(GenericLocationView.prototype, "initialize");
+    });
+
+    it('should return value of options.customizedPosition if supplied', function () {
+      this.view = new PointLocationView({
+        model: new Location()
+      });
+
+      var pos = this.view.getPosition({ customizedPosition: 'foo' });
+
+      expect(pos).toEqual('foo');
+    });
+
+    it('should return value of getGPoints if no customizedPosition is supplied', function () {
+      this.view = new PointLocationView({
+        model: new Location()
+      });
+
+      var pos = this.view.getPosition();
+
+      expect(pos).toEqual(this.view.model.getGPoints()[0]);
+    });
+  });
+});
 });

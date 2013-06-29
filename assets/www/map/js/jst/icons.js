@@ -29,7 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!("JST" in window) || "JST" === undefined) {
+define([
+  'underscore'
+], function (_) {
+  if (!("JST" in window) || "JST" === undefined) {
   window.JST = {};
 }
 
@@ -230,3 +233,4 @@ JST['map/icons/entrance'] = {
   origin: new google.maps.Point(0, 0),
   anchor: new google.maps.Point(18, 47)
 };
+});

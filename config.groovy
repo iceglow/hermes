@@ -29,56 +29,45 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-define([
-  'jasmine',
-  'jquery_mobile'
-], function () {
+phonegapPassword = System.getenv('PG_PASS')
+phonegapKey = System.getenv('PG_KEY')
 
-afterEach(function () {
-  document.getElementById('stage').innerHTML = '';
-  $('body > :not([id=HTMLReporter])').hide();
-
-  // Override the i18n method to make sure we don't get i18n in our tests.
-  $.fn.i18n = function () {
-  };
-
-  // Override jqm loader to disable display of ajax loader in tests.
-  $.mobile.loading = function () {
-  };
-});
-
-beforeEach(function () {
-  $.mobile.pageContainer = $('body');
-  this.validResponse = function (responseText) {
-    return [
-      200,
-      {"Content-Type": "application/json"},
-      JSON.stringify(responseText)
-    ];
-  };
-});
-
-var helper = {
-  trigger: function (obj, name) {
-    var e = document.createEvent('Event');
-    e.initEvent(name, true, true);
-    obj.dispatchEvent(e);
-  },
-
-  delay: function (delay, callback) {
-    var done = false;
-
-    window.setTimeout(function () {
-      done = true
-    }, delay);
-
-    waitsFor(function () {
-      return done
-    });
-
-    runs(function () {
-      callback();
-    });
+phantomjs = {
+  String phantomjsBin = System.getenv('PHANTOMJS')
+  if (!phantomjsBin) {
+    phantomjsBin = System.getenv('PHANTOMJS_HOME')
+    if (phantomjsBin) phantomjsBin += "/bin/phantomjs"
   }
-};
-});
+
+  if (!phantomjsBin)
+    phantomjsBin = "which phantomjs".execute().text.trim()
+
+  if (!phantomjsBin)
+    throw new IllegalArgumentException("No phantomjs found! Specify phantomjs path using \$PHANTOMJS or \$PHANTOMJS_HOME")
+
+  if ("${phantomjsBin} -v".execute().text.trim() < "1.7.0")
+    throw new IllegalArgumentException("Too old version of phantomjs found! Please use version 1.7.0 or later.")
+
+  phantomjsBin
+}
+
+appName = 'Guide'
+
+/**
+ * Environment specific conf
+ */
+environments {
+  dev {
+    appName += '-dev'
+    geoUrl = 'http://mobileapp-dev.it.su.se/geo'
+  }
+
+  test {
+    appName += '-test'
+    geoUrl = 'http://api-test.su.se/geo/1'
+  }
+
+  prod {
+    geoUrl = 'http://api.su.se/geo/1'
+  }
+}

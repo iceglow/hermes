@@ -116,13 +116,14 @@ define([
           }
         },
 
-        /**
-         * Handle click on cancel button.
-         *
-         * @param evt the click event.
-         */
-        handleCancelClick: function (evt) {
-          this.hideFilteredList();
+      /**
+       * Handle click on cancel button.
+       *
+       * @param evt the click event.
+       */
+      handleCancelClick: function (evt) {
+        evt.preventDefault();
+        this.hideFilteredList();
 
         if (this.inputField.val() === "") {
           this.resetLocations();
@@ -155,25 +156,31 @@ define([
           return this.collection.get(modelid);
         },
 
-        showClickedLoction: function (event, ui) {
+      showClickedLoction: function (event, ui) {
+        if (!(event.isDefaultPrevented())) {
           this.hideFilteredList();
           var location = this.getClickedLocation(event.target);
           this.trigger("selected", location);
-        },
+          this.inputField.blur();
+        }
+      },
 
-        resetLocations: function () {
-          this.collection.trigger("reset");
-        },
+      resetLocations: function () {
+        // This is done to show all locations on the map
+        // Earlier we did this.collection.trigger("reset"); which caused the keyboard to not close on android devices
+        // We tracked this down to that replacePoints in MapView was called
+        this.trigger("selected", null);
+      },
 
       populateFilter: function () {
-        var html = this.collection.bySearchable().sortBy(function(location){
+        var html = this.collection.bySearchable().sortBy(function (location) {
           return location.getI18n('name');
         }).reduce(function (memo, location) {
-          //TODO: Use JST
-          return memo + '<li id="' + location.get('id') + '" data-icon="false">' +
-              '<a data-modelid="' + location.get('id') + '" class="autocomplete-link">' + location.getI18n('name') + '</a>' +
-              '</li>';
-        }, "");
+              //TODO: Use JST
+              return memo + '<li id="' + location.get('id') + '" data-icon="false">' +
+                  '<a data-modelid="' + location.get('id') + '" class="autocomplete-link">' + location.getI18n('name') + '</a>' +
+                  '</li>';
+            }, "");
 
           var $ul = $('#search-autocomplete');
           $ul.hide();
@@ -189,9 +196,9 @@ define([
           $ul.show();
         },
 
-        filterSearch: function (text, searchValue) {
-          searchValue = searchValue.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-          var pattern = new RegExp("(^| )" + searchValue, 'i');
+      filterSearch: function (text, searchValue) {
+        searchValue = searchValue.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&').replace(/[^\\||\s]/g, '$&\\s*').replace(/\s/g, '\\s*');
+        var pattern = new RegExp("(^| )" + searchValue, 'i');
 
           return !pattern.test(text);
         }

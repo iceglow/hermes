@@ -38,218 +38,217 @@ define([
   'fixtures',
   'i18n'
 ], function (Mocks, InfoWindowView, Location, AppModel) {
-  describe('Info window view', function () {
-    beforeEach(function () {
-      Mocks.apply();
-      $('#stage').replaceWith("<div data-role='page' id='page-map'></div>");
-      $('#page-map').append(JST['map/infoWindow']({
-        model: new Location(),
-        itemText: "",
-        displayDirections: true
-      }));
-    });
+describe('Info window view', function () {
+  beforeEach(function () {
+    $('#stage').replaceWith("<div data-role='page' id='page-map'></div>");
+    $('#page-map').append(JST['map/infoWindow']({
+      model: new Location(),
+      itemText: "",
+      displayDirections: true
+    }));
+  });
 
-    afterEach(function () {
-      $('#page-map').replaceWith("<div id='stage'></div>");
-    });
+  afterEach(function () {
+    $('#page-map').replaceWith("<div id='stage'></div>");
+  });
 
-    describe('instantiation', function () {
-      it('should add event handler on change of showingNonVisibleForLocation in AppModel ', function () {
-        spyOn(AppModel.prototype, "on");
+  describe('instantiation', function () {
+    it('should add event handler on change of showingNonVisibleForLocation in AppModel ', function () {
+      spyOn(AppModel.prototype, "on");
 
-        this.infoWindow = new InfoWindowView({
-          appModel: new AppModel()
-        });
-
-        expect(AppModel.prototype.on).toHaveBeenCalledWith("change:showingNonVisibleForLocation", jasmine.any(Function), this.infoWindow);
+      this.infoWindow = new InfoWindowView({
+        appModel: new AppModel()
       });
 
-      it('should create google.maps.InfoWindow with maxWidth 260', function () {
-        spyOn(google.maps, "InfoWindow");
-
-        this.infoWindow = new InfoWindowView({
-          appModel: new AppModel()
-        });
-
-        expect(google.maps.InfoWindow).toHaveBeenCalledWith({ maxWidth: 260 });
-      });
+      expect(AppModel.prototype.on).toHaveBeenCalledWith("change:showingNonVisibleForLocation", jasmine.any(Function), this.infoWindow);
     });
 
-    describe('remove', function () {
+    it('should create google.maps.InfoWindow with maxWidth 260', function () {
+      spyOn(google.maps, "InfoWindow");
 
-      it('should call close', function () {
-        spyOn(InfoWindowView.prototype, "close");
-
-        this.infoWindow = new InfoWindowView({
-          appModel: new AppModel()
-        });
-        this.infoWindow.remove();
-
-        expect(InfoWindowView.prototype.close).toHaveBeenCalled();
+      this.infoWindow = new InfoWindowView({
+        appModel: new AppModel()
       });
 
-      it('should remove event handler from document for click on directions', function () {
-        // Mock MapView and getDirections on it
-        var MapView = function () {
-        };
-        MapView.prototype.getDirections = function () {
-        };
-        spyOn(MapView.prototype, "getDirections");
+      expect(google.maps.InfoWindow).toHaveBeenCalledWith({ maxWidth: 260 });
+    });
+  });
 
-        this.infoWindow = new InfoWindowView({
-          appModel: new AppModel(),
-          mapView: new MapView()
-        });
+  describe('remove', function () {
 
-        $(".dir-button").first().trigger("click");
-        expect(MapView.prototype.getDirections.calls.length).toEqual(1);
+    it('should call close', function () {
+      spyOn(InfoWindowView.prototype, "close");
 
-        this.infoWindow.remove();
-        $(".dir-button").first().trigger("click");
-        expect(MapView.prototype.getDirections.calls.length).toEqual(1);
+      this.infoWindow = new InfoWindowView({
+        appModel: new AppModel()
       });
+      this.infoWindow.remove();
 
+      expect(InfoWindowView.prototype.close).toHaveBeenCalled();
     });
 
-    describe('when clicking on a direction link in infowindow', function () {
+    it('should remove event handler from document for click on directions', function () {
       // Mock MapView and getDirections on it
       var MapView = function () {
       };
       MapView.prototype.getDirections = function () {
       };
+      spyOn(MapView.prototype, "getDirections");
 
-      beforeEach(function () {
-        spyOn(MapView.prototype, "getDirections");
-        spyOn(InfoWindowView.prototype, "close");
-
-        this.infoWindow = new InfoWindowView({
-          appModel: new AppModel(),
-          mapView: new MapView()
-        });
+      this.infoWindow = new InfoWindowView({
+        appModel: new AppModel(),
+        mapView: new MapView()
       });
 
-      it('should close the info window', function () {
-        $(".dir-button").first().trigger("click");
-        expect(InfoWindowView.prototype.close).toHaveBeenCalled();
-      });
+      $(".dir-button").first().trigger("click");
+      expect(MapView.prototype.getDirections.calls.length).toEqual(1);
 
-      it('should set selected on clicked link and unselect others', function () {
-        $(".dir-button").first().trigger("click");
-        expect($(".dir-button.selected").attr("id")).toEqual("walking");
+      this.infoWindow.remove();
+      $(".dir-button").first().trigger("click");
+      expect(MapView.prototype.getDirections.calls.length).toEqual(1);
+    });
 
-        $(".dir-button").last().trigger("click");
-        expect($(".dir-button.selected").attr("id")).toEqual("driving");
-        expect($(".dir-button.selected").length).toEqual(1);
-      });
+  });
 
-      it('should pass destination to getDirections', function () {
-        this.infoWindow.setDestination("destination");
-        $(".dir-button").first().trigger("click");
-        expect(MapView.prototype.getDirections).toHaveBeenCalledWith("walking", "destination");
+  describe('when clicking on a direction link in infowindow', function () {
+    // Mock MapView and getDirections on it
+    var MapView = function () {
+    };
+    MapView.prototype.getDirections = function () {
+    };
+
+    beforeEach(function () {
+      spyOn(MapView.prototype, "getDirections");
+      spyOn(InfoWindowView.prototype, "close");
+
+      this.infoWindow = new InfoWindowView({
+        appModel: new AppModel(),
+        mapView: new MapView()
       });
     });
 
-    describe('when clicking on a show related link in the infowindow', function () {
-
+    it('should close the info window', function () {
+      $(".dir-button").first().trigger("click");
+      expect(InfoWindowView.prototype.close).toHaveBeenCalled();
     });
 
-    describe('when opening the infowindow', function () {
+    it('should set selected on clicked link and unselect others', function () {
+      $(".dir-button").first().trigger("click");
+      expect($(".dir-button.selected").attr("id")).toEqual("walking");
 
-      it('should close previous infowindow', function () {
-        this.infoWindow = new InfoWindowView({
-          appModel: new AppModel()
-        });
+      $(".dir-button").last().trigger("click");
+      expect($(".dir-button.selected").attr("id")).toEqual("driving");
+      expect($(".dir-button.selected").length).toEqual(1);
+    });
 
-        spyOn(this.infoWindow.infoWindow, "close");
-        this.infoWindow.open(new Location(), new google.maps.Marker(), new google.maps.LatLng(0, 0));
-        expect(this.infoWindow.infoWindow.close).toHaveBeenCalled();
+    it('should pass destination to getDirections', function () {
+      this.infoWindow.setDestination("destination");
+      $(".dir-button").first().trigger("click");
+      expect(MapView.prototype.getDirections).toHaveBeenCalledWith("walking", "destination");
+    });
+  });
+
+  describe('when clicking on a show related link in the infowindow', function () {
+
+  });
+
+  describe('when opening the infowindow', function () {
+
+    it('should close previous infowindow', function () {
+      this.infoWindow = new InfoWindowView({
+        appModel: new AppModel()
       });
 
-      it('should call model (Location) getI18n method (fetching the text attribute)', function () {
-        spyOn(Location.prototype, "getI18n");
+      spyOn(this.infoWindow.infoWindow, "close");
+      this.infoWindow.open(new Location(), new google.maps.Marker(), new google.maps.LatLng(0, 0));
+      expect(this.infoWindow.infoWindow.close).toHaveBeenCalled();
+    });
 
-        this.infoWindow = new InfoWindowView({
-          appModel: new AppModel()
-        });
+    it('should call model (Location) getI18n method (fetching the text attribute)', function () {
+      spyOn(Location.prototype, "getI18n");
 
-        var location = new Location({
-          name: 'testName',
-          directionAware: false
-        });
-        this.infoWindow.open(location, new google.maps.Marker(), new google.maps.LatLng(0, 0));
-
-        expect(Location.prototype.getI18n).toHaveBeenCalledWith('text');
+      this.infoWindow = new InfoWindowView({
+        appModel: new AppModel()
       });
 
-      it('should call JST with correct values', function () {
-        spyOn(JST, 'map/infoWindow').andReturn('');
-
-        i18n.init({
-          lng: 'sv-SE'
+      var location = new Location({
+        name: 'testName',
+        directionAware: false
         });
+      this.infoWindow.open(location, new google.maps.Marker(), new google.maps.LatLng(0, 0));
 
-        this.infoWindow = new InfoWindowView({
-          appModel: new AppModel()
-        });
+      expect(Location.prototype.getI18n).toHaveBeenCalledWith('text');
+    });
 
-        var location = new Location({
-          name: 'testName',
-          directionAware: false,
-          buildingName: 'testBuilding',
-          text: 'testText',
-          type: 'building'
-        });
+    it('should call JST with correct values', function () {
+      spyOn(JST, 'map/infoWindow').andReturn('');
 
-        this.infoWindow.appModel.locations = {
-          byBuildingAndTypeAndHandicapAdapted: function (building, types, adapted) {
-            return _([ new Location({
-              floor: '1'
-            }) ])
-          }
+      i18n.init({
+        lng: 'sv-SE'
+      });
+
+      this.infoWindow = new InfoWindowView({
+        appModel: new AppModel()
+      });
+
+      var location = new Location({
+        name: 'testName',
+        directionAware: false,
+        buildingName: 'testBuilding',
+        text: 'testText',
+        type: 'building'
+      });
+
+      this.infoWindow.appModel.locations = {
+        byBuildingAndTypeAndHandicapAdapted: function (building, types, adapted) {
+          return _([ new Location({
+            floor: '1'
+          }) ])
         }
+      }
 
-        this.infoWindow.open(location, new google.maps.Marker(), new google.maps.LatLng(0, 0));
+      this.infoWindow.open(location, new google.maps.Marker(), new google.maps.LatLng(0, 0));
 
-        expect(JST['map/infoWindow']).toHaveBeenCalledWith({
-          name: 'testName',
-          displayDirections: false,
-          model: location,
-          itemText: 'testText',
-          hasElevators: true,
-          hasEntrances: true,
-          tFloors: '1'
-        });
+      expect(JST['map/infoWindow']).toHaveBeenCalledWith({
+        name: 'testName',
+        displayDirections: false,
+        model: location,
+        itemText: 'testText',
+        hasElevators: true,
+        hasEntrances: true,
+        tFloors: '1'
+      });
+    });
+
+    it('should call JST with correct values when other language than swedish', function () {
+      spyOn(JST, 'map/infoWindow').andReturn('');
+
+      i18n.init({
+        lng: 'fr-FR'
       });
 
-      it('should call JST with correct values when other language than swedish', function () {
-        spyOn(JST, 'map/infoWindow').andReturn('');
-
-        i18n.init({
-          lng: 'fr-FR'
-        });
-
-        this.infoWindow = new InfoWindowView({
-          appModel: new AppModel()
-        });
-
-        var location = new Location({
-          name: 'testName',
-          nameEn: 'testName (en)',
-          directionAware: false,
-          text: 'testText',
-          textEn: 'testText (en)',
-          type: 'department'
-        });
-
-        this.infoWindow.open(location, new google.maps.Marker(), new google.maps.LatLng(0, 0));
-
-        expect(JST['map/infoWindow']).toHaveBeenCalledWith({
-          name: 'testName (en)',
-          displayDirections: false,
-          model: location,
-          itemText: 'testText (en)'
-        });
+      this.infoWindow = new InfoWindowView({
+        appModel: new AppModel()
       });
+
+      var location = new Location({
+        name: 'testName',
+        nameEn: 'testName (en)',
+        directionAware: false,
+        text: 'testText',
+        textEn: 'testText (en)',
+        type: 'department'
+      });
+
+      this.infoWindow.open(location, new google.maps.Marker(), new google.maps.LatLng(0, 0));
+
+      expect(JST['map/infoWindow']).toHaveBeenCalledWith({
+        name: 'testName (en)',
+        displayDirections: false,
+        model: location,
+        itemText: 'testText (en)'
+      });
+    });
 
     it('should use anchor for position when no latlng is passed', function () {
       this.infoWindow = new InfoWindowView({

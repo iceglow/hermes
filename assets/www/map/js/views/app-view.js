@@ -116,7 +116,8 @@ define([
             this.menuPopupView = new MenuPopupView({
               el: $('#menupopup'),
               campuses: this.model.campuses,
-              appModel: this.model
+              appModel: this.model,
+              searchView: this.searchView
             });
 
             this.menuPopupView.on('selected', this.menuSelectCallback);
@@ -125,42 +126,42 @@ define([
           }
         },
 
-        /**
-         * Registers events.
-         */
-        events: {
-          "click #menubutton": "showMenu"
-        },
+      /**
+       * Registers events.
+       */
+      events: {
+        "click #menubutton": "showMenu"
+      },
 
-        /**
-         * Render the app module.
-         */
-        render: function () {
-          $('div[data-role="header"] > h1 > span').attr('data-i18n', this.title);
-          $('div[data-role="header"]').i18n();
+      /**
+       * Render the app module.
+       */
+      render: function () {
+        $('div[data-role="header"] > h1 > span').attr('data-i18n', this.title);
+        $('div[data-role="header"]').i18n();
 
-          if (this.model.get('menu') === true) {
-            $('div[data-role="header"]').append(JST['map/menu/button']);
-            $('#menubutton').button();
+        if (this.model.get('menu') === true) {
+          $('div[data-role="header"]').append(JST['map/menu/button']);
+          $('#menubutton').button();
 
-            this.delegateEvents();
-          }
-          this.mapView.render();
-        },
+          this.delegateEvents();
+        }
+        this.mapView.render();
+      },
 
-        /**
-         * Remove handler for the view.
-         */
-        remove: function () {
-          $(document).off('.appview');
+      /**
+       * Remove handler for the view.
+       */
+      remove: function () {
+        $(document).off('.appview');
 
-          // Stop GPS positioning watch
-          if (this.gpsWatchId && navigator.geolocation) {
-            navigator.geolocation.clearWatch(this.gpsWatchId);
-          }
+        // Stop GPS positioning watch
+        if (this.gpsWatchId && navigator.geolocation) {
+          navigator.geolocation.clearWatch(this.gpsWatchId);
+        }
 
-          Backbone.View.prototype.remove.call(this);
-        },
+        Backbone.View.prototype.remove.call(this);
+      },
 
         /**
          * Handle selected model from search view.
@@ -168,78 +169,85 @@ define([
          * @param selectedModel the selected model
          */
         locationCallback: function (selectedModel) {
-          this.model.hideAllModelsExceptOne(selectedModel);
-          selectedModel.trigger('click');
-        },
-
-        /**
-         * Handle selected model from search view.
-         *
-         * @param selectedModel the selected model
-         */
-        campusCallback: function (selectedModel) {
-          this.model.set('campus', selectedModel);
-        },
-
-        /**
-         * Callback for menu selection
-         *
-         * @param campus the selected campus
-         */
-        menuSelectCallback: function (campus) {
-          this.model.set('campus', campus);
-        },
-
-        /**
-         * Handles the device ready event.
-         */
-        handleDeviceReady: function () {
-          gaPlugin.trackPage(null, null, "map/index.html#" + Backbone.history.fragment);
-          this.startGPSPositioning();
-        },
-
-        /**
-         * Handle changed zoom level.
-         *
-         * @param zoom the new zoom level.
-         */
-        handleZoomChanged: function (zoom) {
-          if (this.model.get('zoomSensitive') === true) {
-            if (zoom >= config.map.zoom.threshold) {
-              this.trigger('toggleMarkerVisibility', this.model.locations, true);
-            }
-            else if (zoom < config.map.zoom.threshold) {
-              this.trigger('toggleMarkerVisibility', this.model.locations, false);
-            }
+          if (selectedModel) {
+            this.model.hideAllModelsExceptOne(selectedModel);
+            selectedModel.trigger('click');
+          }
+          else {
+            this.model.handleLocationsReset();
+            this.mapView.infoWindowView.close();
           }
         },
 
-        /**
-         * Show the menu.
-         */
-        showMenu: function () {
-          this.menuPopupView.render();
-        },
+      /**
+       * Handle selected model from search view.
+       *
+       * @param selectedModel the selected model
+       */
+      campusCallback: function (selectedModel) {
+        if (selectedModel) {
+          this.model.set('campus', selectedModel);
+        }
+      },
 
-        /**
-         * Show all locations of a specific type.
-         */
-        // TODO Why do we need to call updateLocations twice initially?
-        updateLocations: function () {
-          this.model.fetchLocations();
-        },
+      /**
+       * Callback for menu selection
+       *
+       * @param campus the selected campus
+       */
+      menuSelectCallback: function (campus) {
+        this.model.set('campus', campus);
+      },
 
-        /**
-         * Moves map to selected campus & resets locations.
-         */
-        changeCampus: function () {
-          var campus = this.model.get('campus');
-          var lat = campus.getLat();
-          var lng = campus.getLng();
-          this.mapModel.setMapPosition(lat, lng);
-          this.mapModel.setZoom(campus.getZoom());
-          this.mapView.replacePoints(this.model.locations);
-        },
+      /**
+       * Handles the device ready event.
+       */
+      handleDeviceReady: function () {
+        gaPlugin.trackPage(null, null, "map/index.html#" + Backbone.history.fragment);
+        this.startGPSPositioning();
+      },
+
+      /**
+       * Handle changed zoom level.
+       *
+       * @param zoom the new zoom level.
+       */
+      handleZoomChanged: function (zoom) {
+        if (this.model.get('zoomSensitive') === true) {
+          if (zoom >= config.map.zoom.threshold) {
+            this.trigger('toggleMarkerVisibility', this.model.locations, true);
+          }
+          else if (zoom < config.map.zoom.threshold) {
+            this.trigger('toggleMarkerVisibility', this.model.locations, false);
+          }
+        }
+      },
+
+      /**
+       * Show the menu.
+       */
+      showMenu: function () {
+        this.menuPopupView.render();
+      },
+
+      /**
+       * Show all locations of a specific type.
+       */
+      // TODO Why do we need to call updateLocations twice initially?
+      updateLocations: function () {
+        this.model.fetchLocations();
+      },
+
+      /**
+       * Moves map to selected campus & resets locations.
+       */
+      changeCampus: function () {
+        var campus = this.model.get('campus');
+        var lat = campus.getLat();
+        var lng = campus.getLng();
+        this.mapModel.setMapPosition(lat, lng);
+        this.mapModel.setZoom(campus.getZoom());
+      },
 
         /**
          * Update the position from GPS.

@@ -58,7 +58,11 @@ define([
         },
 
         initialize: function () {
-          _.bindAll(this, "hideAllNonVisibleTypes", "showNonVisibleForLocationByRelation");
+          _.bindAll(this,
+              "showVisibleTypes",
+              "hideAllNonVisibleTypes",
+              "handleLocationsReset",
+              "handleVisibilityForLocationByRelation");
           this.campuses = new Campuses();
           this.locations = new Locations(null, {
             searchableTypes: _.difference(this.get('types'), this.get('nonVisibleTypes'))
@@ -79,36 +83,47 @@ define([
           return this.get('filterByCampus') ? this.campuses : this.locations;
         },
 
-        /**
-         * Fetch all locations of a specific type.
-         */
-        fetchLocations: function () {
-          this.locations.fetch({
-            data: {
-              types: this.get('types')
-            },
-            error: function () {
-              alert("ERROR! Failed to fetch locations.");
-            },
-            reset: true
-          });
-        },
+      /**
+       * Fetch all locations of a specific type.
+       */
+      fetchLocations: function () {
+        this.locations.fetch({
+          data: {
+            types: this.get('types')
+          },
+          error: function () {
+            var errormsg = i18n.t("error.connectionlost");
+            showError(errormsg);
+          },
+          reset: true
+        });
+      },
 
-        /**
-         * Sets no visibility on all locations that is in the list of non visible types
-         */
-        hideAllNonVisibleTypes: function () {
-          var nonVisibleTypes = this.get("nonVisibleTypes");
+      /**
+       * Sets visibility to true on all locations that is not in the list of non visible types
+       */
+      showVisibleTypes: function () {
+        var nonVisibleTypes = this.get("nonVisibleTypes");
 
-          this.locations.each(function (location) {
-            if (_.contains(nonVisibleTypes, location.get('type'))) {
-              location.set('visible', false);
-            }
-            else {
-              location.set('visible', true);
-            }
-          });
-        },
+        this.locations.each(function (location) {
+          if (!_.contains(nonVisibleTypes, location.get('type'))) {
+            location.set('visible', true);
+          }
+        });
+      },
+
+      /**
+       * Sets no visibility on all locations that is in the list of non visible types
+       */
+      hideAllNonVisibleTypes: function () {
+        var nonVisibleTypes = this.get("nonVisibleTypes");
+
+        this.locations.each(function (location) {
+          if (_.contains(nonVisibleTypes, location.get('type'))) {
+            location.set('visible', false);
+          }
+        });
+      },
 
         /**
          * Sets no visibility on all locations except the provided
@@ -125,10 +140,15 @@ define([
           visibleModel.set('visible', true);
         },
 
+        handleLocationsReset: function () {
+          this.hideAllNonVisibleTypes();
+          this.showVisibleTypes();
+        },
+
         /**
          * Sets visibility on locations that is related for specified types
          */
-        showNonVisibleForLocationByRelation: function (location, relatedBy, types) {
+        handleVisibilityForLocationByRelation: function (location, relatedBy, types, visibility) {
           this.hideAllNonVisibleTypes();
           // TODO Find some other way of doing string capitalization, maybe https://github.com/epeli/underscore.string#readme
           var byFunction = relatedBy ? this.locations["by" + relatedBy.charAt(0).toUpperCase() + relatedBy.slice(1)] : null;
@@ -139,13 +159,15 @@ define([
               return _.contains(types, location.get('type'));
             });
 
-            _.invoke(relatedWithType, "set", "visible", true);
+            _.invoke(relatedWithType, "set", "visible", visibility);
 
-            showingNonVisibleForLocation = {
-              location: location,
-              relatedBy: relatedBy,
-              types: types
-            };
+            if (visibility) {
+              showingNonVisibleForLocation = {
+                location: location,
+                relatedBy: relatedBy,
+                types: types
+              };
+            }
           }
 
           this.set("showingNonVisibleForLocation", showingNonVisibleForLocation);

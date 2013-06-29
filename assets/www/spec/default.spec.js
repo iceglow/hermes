@@ -79,20 +79,18 @@ define([
       });
     });
 
-    describe('using common/header with option backbutton', function () {
-      it('should render a header with title and add a back button', function () {
+  describe('using common/header with option backbutton', function () {
+    it('should render a header with title and add a back button', function () {
+      $('[data-role="page"]').data("header-options", "backbutton");
+      $.mobile.loadPage('#page', {prefetch: "true"});
 
-        $('[data-role="page"]').data("header-options", "backbutton");
-        $.mobile.loadPage('#page', {prefetch: "true"});
-
-        var $header = $('[data-role=header]');
-        expect($header.data("theme")).toBe("a");
-        expect($header.find("h1").text()).toBe(testTitle);
-        var $button = $header.find("a");
-        expect($button.data("role")).toBe("button");
-        expect($button.attr('href')).toBe("#start");
-        expect($button.hasClass("ui-btn-left")).toBeTruthy();
-      });
+      var $header = $('[data-role=header]');
+      expect($header.data("theme")).toBe("a");
+      expect($header.find("h1").text()).toBe(testTitle);
+      var $button = $header.find("a");
+      expect($button.data("role")).toBe("button");
+      expect($button.data("rel")).toBe("back");
+      expect($button.hasClass("ui-btn-left")).toBeTruthy();
     });
 
     describe('using common/header with option homebutton', function () {
@@ -123,14 +121,14 @@ define([
     });
   });
 
-  describe('External-link-dialog', function () {
-    describe('when document contains links with target _blank', function () {
-      beforeEach(function () {
-        var html = '<div data-role="page" id="page"><a href="testing.html" target="_blank">test</a></div>';
-        $('#stage').replaceWith(html);
-        $.mobile.loadPage("#page", {prefetch: "true"});
-        i18n.init(i18n.options);
-      });
+describe('External-link-dialog', function () {
+  describe('when document contains links with target _blank', function () {
+    beforeEach(function () {
+      var html = '<div data-role="page" id="page"><div data-role="content"><a href="testing.html" target="_blank">test</a></div></div>';
+      $('#stage').replaceWith(html);
+      $.mobile.loadPage("#page", {prefetch: "true"});
+      $.mobile.activePage = $('#page');
+    });
 
       afterEach(function () {
         $('#page').replaceWith("<div id='stage'></div>");
@@ -167,15 +165,61 @@ define([
         var popup = $("#external-link-dialog");
         popup.find("a[target=_system]").trigger('click');
 
+      helper.delay(2, function () {
         expect(popup.parent().hasClass('ui-popup-hidden')).toBeTruthy();
-      });
+      })
+
     });
   });
+});
 
-  describe('GAPlugin', function () {
-    describe('on deviceready event', function () {
-      it('should init GAPlugin', function () {
-        spyOn(window.plugins.gaPlugin, 'init');
+
+describe('Error-dialog', function () {
+  describe('when error occurs', function () {
+    afterEach(function () {
+      $('.ui-popup-screen').remove();
+      $('.ui-popup-container').remove();
+      $('div[data-role="popup"]').remove();
+    });
+
+    it('should present a popup with error message in case of error', function () {
+      showError('fel 1');
+
+      var html = $('#errorPopup').html();
+      expect(html).toBeDefined();
+
+      var msg = $("#errorPopup").find('span').html().trim();
+      expect(msg).toEqual('fel 1');
+    });
+
+    it('when pressing "cancel" should close the popup and remove the html', function () {
+      showError('fel 2');
+
+      var html = $('#errorPopup').html();
+      expect(html).toBeDefined();
+
+      $('#closeErrorDialog').trigger('click');
+
+      var html = $('#errorPopup').html();
+      expect(html).toBeUndefined();
+    });
+
+    it('error message should be supressed during unload events', function () {
+      $(window).trigger('unload');
+      showError('fel 1');
+
+      var html = $('#errorPopup').html();
+      expect(html).toBeUndefined();
+
+      showError.unSupressErrors();
+    });
+  });
+});
+
+describe('GAPlugin', function () {
+  describe('on deviceready event', function () {
+    it('should init GAPlugin', function () {
+      spyOn(window.plugins.gaPlugin, 'init');
 
         $(document).trigger('deviceready');
 
@@ -187,13 +231,13 @@ define([
 
         $(document).trigger('deviceready');
 
-        expect(window.plugins.gaPlugin.init).toHaveBeenCalledWith(
-            null,
-            null,
-            config.core.ga.account,
-            jasmine.any(Number)
-        );
-      });
+      expect(window.plugins.gaPlugin.init).toHaveBeenCalledWith(
+          null,
+          null,
+          config.core.ga.account,
+          jasmine.any(Number)
+      );
+    });
 
       it('should set max seconds = 10 on init', function () {
         spyOn(window.plugins.gaPlugin, 'init');
@@ -209,4 +253,24 @@ define([
       });
     });
   });
+
+describe('Click on a .button-grid link', function () {
+  beforeEach(function () {
+    var html = '<div class="button-grid"><a id="link" href="testing.html">test</a></div>';
+    $('#stage').append(html);
+  });
+
+  afterEach(function () {
+    $('#stage').replaceWith("<div id='stage'></div>");
+  });
+
+  it('should make an ajax call', function () {
+    spyOn($, 'ajax').andCallFake(function (obj) {
+      expect(obj.complete).toBeDefined();
+    });
+
+    $("#link").trigger('click');
+  });
+});
+});
 });

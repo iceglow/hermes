@@ -28,7 +28,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 define([
   'spec/mocks/googlemaps-mocks',
   'map/js/views/polygon-location-view',
@@ -41,55 +40,55 @@ define([
       Mocks.apply();
     });
 
-    describe('initializing', function () {
-      beforeEach(function () {
-        spyOn(GenericLocationView.prototype, "initialize");
-      });
-
-      it('should call GenericLocationView.initialize', function () {
-        this.view = new PolygonLocationView({
-          model: new Location()
-        });
-
-        expect(GenericLocationView.prototype.initialize).toHaveBeenCalled();
-      });
-
-      it('should create a google.Maps.Polygon', function () {
-        spyOn(google.maps, 'Polygon');
-
-        this.view = new PolygonLocationView({
-          model: new Location()
-        });
-
-        expect(google.maps.Polygon).toHaveBeenCalledWith({
-          strokeColor: "#002F5F",
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: "#A1D8E0",
-          fillOpacity: 0.35,
-          visible: true,
-          poiType: this.view.model.getPoiType(),
-          map: null,
-          paths: this.view.model.getGPoints()
-        });
-      });
+  describe('initializing', function () {
+    beforeEach(function () {
+      spyOn(GenericLocationView.prototype, "initialize");
     });
 
-    describe('updatePosition', function () {
-      beforeEach(function () {
-        spyOn(GenericLocationView.prototype, "initialize");
+    it('should call GenericLocationView.initialize', function () {
+      this.view = new PolygonLocationView({
+        model: new Location()
       });
 
-      it('should call marker.setPath', function () {
-        this.view = new PolygonLocationView({
-          model: new Location()
-        });
-        spyOn(this.view.marker, 'setPath');
+      expect(GenericLocationView.prototype.initialize).toHaveBeenCalled();
+    });
 
-        this.view.updatePosition();
+    it('should create a google.Maps.Polygon', function () {
+      spyOn(google.maps, 'Polygon');
 
-        expect(this.view.marker.setPath).toHaveBeenCalledWith(this.view.model.getGPoints());
+      this.view = new PolygonLocationView({
+        model: new Location()
+      });
+
+      expect(google.maps.Polygon).toHaveBeenCalledWith({
+        strokeColor: "#002F5F",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: "#A1D8E0",
+        fillOpacity: 0.35,
+        visible: true,
+        poiType: this.view.model.getPoiType(),
+        map: null,
+        paths: this.view.model.getGPoints()
       });
     });
   });
+
+  describe('updatePosition', function () {
+    beforeEach(function () {
+      spyOn(GenericLocationView.prototype, "initialize");
+    });
+
+    it('should call marker.setPath', function () {
+      this.view = new PolygonLocationView({
+        model: new Location()
+      });
+      spyOn(this.view.marker, 'setPath');
+
+      this.view.updatePosition();
+
+      expect(this.view.marker.setPath).toHaveBeenCalledWith(this.view.model.getGPoints());
+    });
+  });
+});
 });

@@ -34,126 +34,128 @@
  *
  * @author <a href="mailto:joakim.lundin@su.se">Joakim Lundin</a>
  */
-
 define([], function () {
 
-  var google = {};
-  google.maps = {};
+window.google = {};
+google.maps = {};
 
-  google.maps.event = {};
-  google.maps.event.addListener = function (obj, event, callback) {
-  };
-  google.maps.event.addListenerOnce = function (obj, event, callback) {
-  };
+google.maps.event = {};
+google.maps.event.addListener = function (obj, event, callback) {
+};
+google.maps.event.addListenerOnce = function (obj, event, callback) {
+};
+google.maps.event.trigger = function(obj, event) {
+};
 
-  google.maps.Map = function (element, options) {
-    this.getBounds = function () {
-    };
-    this.fitBounds = function (bounds) {
-    };
-    this.panTo = function (position) {
-    };
-    this.getZoom = function () {
-    };
-    this.setZoom = function (zoom) {
-    };
+google.maps.Map = function (element, options) {
+  this.getBounds = function () {
   };
-
-  google.maps.MapTypeId = function () {
-    this.ROADMAP = "ROADMAP";
+  this.fitBounds = function (bounds) {
   };
-
-  google.maps.MVCObject = function () {
+  this.panTo = function (position) {
   };
-
-  google.maps.Icon = function (image) {
+  this.getZoom = function () {
   };
-
-  google.maps.Marker = function (options) {
-    this.setMap = function (map) {
-    };
-    this.getMap = function () {
-    };
-    this.setVisible = function (visibility) {
-    };
-    this.setPosition = function (position) {
-    };
+  this.setZoom = function (zoom) {
   };
+};
 
-  google.maps.Polyline = function (options) {
-    this.setMap = function (map) {
-    };
-    this.setVisible = function (visibility) {
-    };
-    this.setPath = function (path) {
-    };
+google.maps.MapTypeId = function () {
+  this.ROADMAP = "ROADMAP";
+};
+
+google.maps.MVCObject = function () {
+};
+
+google.maps.Icon = function (image) {
+};
+
+google.maps.Marker = function (options) {
+  this.setMap = function (map) {
   };
-
-  google.maps.Polygon = function (options) {
-    this.setMap = function (map) {
-    };
-    this.setVisible = function (visibility) {
-    };
-    this.setPath = function (path) {
-    };
+  this.getMap = function () {
   };
-
-  google.maps.LatLng = function (lat, lng) {
-    this._lat = lat;
-    this._lng = lng;
-
-    this.lat = function () {
-      return this._lat;
-    };
-    this.lng = function () {
-      return this._lng;
-    };
+  this.setVisible = function (visibility) {
   };
-
-  google.maps.LatLngBounds = function (pos1, pos2) {
+  this.setPosition = function (position) {
   };
+};
 
-  google.maps.ControlPosition = function () {
-    this.LEFT_TOP = 0;
+google.maps.Polyline = function (options) {
+  this.setMap = function (map) {
   };
+  this.setVisible = function (visibility) {
+  };
+  this.setPath = function (path) {
+  };
+};
 
-  google.maps.Size = function (x, y) {
+google.maps.Polygon = function (options) {
+  this.setMap = function (map) {
   };
+  this.setVisible = function (visibility) {
+  };
+  this.setPath = function (path) {
+  };
+};
 
-  google.maps.Point = function (x, y) {
-  };
+google.maps.LatLng = function (lat, lng) {
+  this._lat = lat;
+  this._lng = lng;
 
-  google.maps.InfoWindow = function () {
-    this.setContent = function () {
-    };
-    this.setPosition = function () {
-    };
-    this.open = function () {
-    };
-    this.close = function () {
-    };
+  this.lat = function () {
+    return this._lat;
   };
+  this.lng = function () {
+    return this._lng;
+  };
+};
 
-  google.maps.DirectionsTravelMode = {
-    WALKING: 'W',
-    BICYCLING: 'B',
-    DRIVING: 'D',
-    TRANSIT: 'T'
-  };
+google.maps.LatLngBounds = function (pos1, pos2) {
+};
 
-  google.maps.DirectionsService = function () {
-    this.route = function () {
-    };
-  };
+google.maps.ControlPosition = function () {
+  this.LEFT_TOP = 0;
+};
 
-  google.maps.DirectionsRenderer = function () {
-    this.setMap = function (map) {
-    };
-    this.setPanel = function (panel) {
-    };
-    this.setDirections = function (result) {
-    };
+google.maps.Size = function (x, y) {
+};
+
+google.maps.Point = function (x, y) {
+};
+
+google.maps.InfoWindow = function () {
+  this.setContent = function () {
   };
+  this.setPosition = function () {
+  };
+  this.open = function () {
+  };
+  this.close = function () {
+  };
+};
+
+google.maps.DirectionsTravelMode = {
+  WALKING: 'W',
+  BICYCLING: 'B',
+  DRIVING: 'D',
+  TRANSIT: 'T'
+};
+
+google.maps.DirectionsService = function () {
+  this.route = function () {
+  };
+};
+
+google.maps.DirectionsRenderer = function () {
+  this.setMap = function (map) {
+  };
+  this.setPanel = function (panel) {
+  };
+  this.setDirections = function (result) {
+  };
+};
+
 
   return {
     apply: function () {

@@ -63,12 +63,21 @@ define([
 
   JST['common/external-link-dialog'] = _.template(' \
   <div data-role="content"> \
-    <p><span data-i18n="common.external.question">The page will be displayed in an external browser, do you wish to continue?</span></p> \
+    <p class="ui-content"><span data-i18n="common.external.question">The page will be displayed in an external browser, do you wish to continue?</span></p> \
       <fieldset class="ui-grid-a"> \
-        <div class="ui-block-a"><a data-role="button" data-rel="back"><span data-i18n="common.external.no">No</span></a></div> \
-        <div class="ui-block-b"><a data-role="button" data-rel="external" href="<%= href%>" target="_system" \
-          data-ajax="false" data-theme="b"><span data-i18n="common.external.yes">Yes</span></a></div> \
+        <div class="ui-block-a"><a data-role="button" data-rel="external" href="<%= href%>" target="_system" \
+          data-ajax="false" ><span data-i18n="common.external.yes">Yes</span></a></div> \
+          <div class="ui-block-b"><a data-role="button" data-rel="back" data-theme="b"><span data-i18n="common.external.no">No</span></a></div> \
       </fieldset> \
   </div> \
+');
+
+JST['common/error-dialog'] = _.template(' \
+  <div id="errorPopup" data-role="popup" class="ui-content" data-theme="a" data-overlay-theme="a">\
+    <div data-role="content"> \
+        <p><span>	<%= errormessage%></span></p> \
+        <a id="closeErrorDialog" data-role="button"><span data-i18n="error.button"> Close </span></a> \
+    </div>\
+  </div>\
 ');
 });

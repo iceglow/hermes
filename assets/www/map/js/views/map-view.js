@@ -71,45 +71,45 @@ define([
         _.bindAll(this,
             'render',
             'updateCurrentPosition',
-            'handleZoomChanged',
+            'handleMapZoomChange',
             'removeAllMarkers',
             'addMarkers'
         );
 
-          this.pointViews = [];
-          this.infoWindowView = new InfoWindowView({
-            mapView: this,
-            appModel: options.appModel
-          });
+        this.pointViews = [];
+        this.infoWindowView = new InfoWindowView({
+          mapView: this,
+          appModel: options.appModel
+        });
 
-          // Google Maps Options
-          var myOptions = {
-            zoom: 15,
-            center: this.model.get('location'),
-            mapTypeControl: false,
-            navigationControlOptions: { position: google.maps.ControlPosition.LEFT_TOP },
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            streetViewControl: false,
-            styles: [
-              {
-                featureType: "poi",
-                elementType: "labels",
-                stylers: [
-                  {
-                    visibility: "off"
-                  }
-                ]
-              }
-            ]
-          };
+        // Google Maps Options
+        var myOptions = {
+          zoom: 15,
+          center: this.model.get('location'),
+          mapTypeControl: false,
+          navigationControlOptions: { position: google.maps.ControlPosition.LEFT_TOP },
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          streetViewControl: false,
+          panControl: false,
+          zoomControl: false,
+          styles: [
+            {
+              featureType: "poi",
+              elementType: "labels",
+              stylers: [
+                {
+                  visibility: "off"
+                }
+              ]
+            }
+          ]
+        };
 
           // Add the Google Map to the page
           this.map = new google.maps.Map(this.el, myOptions);
 
         var self = this;
-        google.maps.event.addListener(this.map, 'zoom_changed', function () {
-          self.trigger('zoom_changed', self.map.getZoom());
-        });
+        google.maps.event.addListener(this.map, 'zoom_changed', this.handleMapZoomChange);
         this.on('updateCurrentPosition', this.updateCurrentPosition);
         this.model.on('change:mapPosition', this.updateMapPosition, this);
         this.model.on('change:zoom', this.updateMapZoom, this);
@@ -140,28 +140,12 @@ define([
           Backbone.View.prototype.remove.call(this);
         },
 
-        /**
-         * Render the map view.
-         */
-        render: function () {
-
-          this.resize();
-
-          var self = this;
-
-          /* Using the two blocks below istead of creating a new view for
-           * page-dir, which holds the direction details. This because
-           * it's of the small amount of functionality.
-           */
-          // Briefly show hint on using instruction tap/zoom
-          $('#page-dir').live("pageshow", function () {
-            self.fadingMsg("Tap any instruction<br/>to see details on map");
-          });
-
-          $('#page-dir table').live("tap", function () {
-            $.mobile.changePage($('#page-map'), {});
-          });
-        },
+      /**
+       * Render the map view.
+       */
+      render: function () {
+        this.resize();
+      },
 
       /**
        * Handler for window resizing.
@@ -180,185 +164,163 @@ define([
         }, 150);
       },
 
-        createPositionMarker: function () {
-          var currentPosition = new Location({
-            id: -100,
-            campus: null,
-            type: 'CurrentPosition',
-            name: 'You are here!',
-            coords: [
-              [this.model.get('location').lat(), this.model.get('location').lng()]
-            ],
-            directionAware: false,
-            pin: new google.maps.MarkerImage(
-                '../img/icons/position.png'
-            )
-          });
+      createPositionMarker: function () {
+        var currentPosition = new Location({
+          id: -100,
+          campus: null,
+          type: 'current_position',
+          name: i18n.t("map.current_position.name", { lng: "sv" }),
+          nameEn: i18n.t("map.current_position.name", { lng: "en" }),
+          coords: [
+            [this.model.get('location').lat(), this.model.get('location').lng()]
+          ],
+          directionAware: false
+        });
 
-          this.currentPositionPoint = new PointLocationView({
-            model: currentPosition,
-            gmap: this.map,
-            infoWindow: this.infoWindowView
-          });
-        },
+        this.currentPositionPoint = new PointLocationView({
+          model: currentPosition,
+          gmap: this.map,
+          infoWindow: this.infoWindowView
+        });
+      },
 
-        createPositionMarker: function () {
-          var currentPosition = new Location({
-            id: -100,
-            campus: null,
-            type: 'current_position',
-            name: i18n.t("map.current_position.name", { lng: "sv" }),
-            nameEn: i18n.t("map.current_position.name", { lng: "en" }),
-            coords: [
-              [this.model.get('location').lat(), this.model.get('location').lng()]
-            ],
-            directionAware: false
-          });
+      handleMapZoomChange: function () {
+        this.trigger('zoom_changed', this.map.getZoom());
+      },
 
-          this.currentPositionPoint = new PointLocationView({
-            model: currentPosition,
-            gmap: this.map,
-            infoWindow: this.infoWindowView
-          });
-        },
+      /**
+       * Sets center of the map to model.mapPosition
+       */
+      updateMapPosition: function () {
+        this.map.panTo(this.model.get('mapPosition'));
+      },
 
-        handleZoomChanged: function () {
-          this.trigger('selected', this.map.getZoom());
-        },
+      /**
+       * Zooms the map to model.zoom
+       */
+      updateMapZoom: function () {
+        this.map.setZoom(this.model.get('zoom'));
+      },
 
-        /**
-         * Sets center of the map to model.mapPosition
-         */
-        updateMapPosition: function () {
-          this.map.panTo(this.model.get('mapPosition'));
-        },
-
-        /**
-         * Zooms the map to model.zoom
-         */
-        updateMapZoom: function () {
-          this.map.setZoom(this.model.get('zoom'));
-        },
-
-        /**
-         * Sets position of the current position point.
-         *
-         * @param position Phonegap geolocation Position
-         */
-        updateCurrentPosition: function (position) {
-          if (typeof this.currentPositionPoint === 'undefined') {
-            this.createPositionMarker();
-            this.currentPositionPoint.render();
-          }
-
-          this.currentPositionPoint.model.set('coords', [
-            [position.coords.latitude, position.coords.longitude]
-          ]);
-        },
-
-        /**
-         * Replaces points on the map.
-         *
-         * @param {Location} newPoints the new points to paint on the map.
-         */
-        replacePoints: function (newPoints) {
-          this.removeAllMarkers();
-          this.addMarkers(newPoints);
-        },
-
-        /**
-         * Remove all markers from the map.
-         */
-        removeAllMarkers: function () {
-          _.each(this.pointViews, function (pointView) {
-            // remove all the map markers
-            pointView.remove();
-          });
-
-          // empty the map
-          this.pointViews = [];
-        },
-
-        /**
-         * Add new markers to the map.
-         *
-         * @param newPoints the new markers.
-         */
-        addMarkers: function (newPoints) {
-          var self = this;
-
-          newPoints.each(function (item) {
-            var point = null;
-            var shape = item.get('shape');
-
-            if (shape === "line") {
-              point = new LineLocationView({ model: item, gmap: self.map, infoWindow: self.infoWindowView });
-            }
-            else if (shape === "polygon") {
-              point = new PolygonLocationView({ model: item, gmap: self.map, infoWindow: self.infoWindowView });
-            }
-            else {
-              point = new PointLocationView({ model: item, gmap: self.map, infoWindow: self.infoWindowView });
-            }
-
-            // if the polygon has an icon, draw it
-            if (item.getPin() != null && (shape === "line" || shape === "polygon")) {
-              var iconPoint = new PointLocationView({
-                model: item,
-                gmap: self.map,
-                infoWindow: self.infoWindowView,
-                customizedPosition: point.getCenter()});
-              self.pointViews.push(iconPoint);
-            }
-
-            self.pointViews.push(point);
-          });
-
-          // If there is only one marker on the map, display the info window.
-          if (_.size(this.pointViews) === 1) {
-            var point = _.first(this.pointViews);
-            point.openInfoWindow(point.model, point.marker);
-          }
-        },
-
-        /**
-         * Print directions on the map.
-         *
-         * @param travelMode walking, bicycling, driving, or public transportation
-         * @param destination optional parameter, defaults to destination (global variable)
-         */
-        getDirections: function (travelMode, destination) {
-          var orig = this.currentPositionPoint.getPosition();
-          var travMode = null;
-
-          if (travelMode === "walking") {
-            travMode = google.maps.DirectionsTravelMode.WALKING;
-          } else if (travelMode === "bicycling") {
-            travMode = google.maps.DirectionsTravelMode.BICYCLING;
-          } else if (travelMode === "driving") {
-            travMode = google.maps.DirectionsTravelMode.DRIVING;
-          } else if (travelMode === "publicTransp") {
-            travMode = google.maps.DirectionsTravelMode.TRANSIT;
-          }
-
-          var directionsService = new google.maps.DirectionsService();
-          var directionsDisplay = new google.maps.DirectionsRenderer();
-          directionsDisplay.setMap(this.map);
-
-          if (directionsDisplay) {
-            directionsDisplay.setPanel(document.getElementById("dir_panel"));
-          }
-
-          var request = {
-            origin: orig,
-            destination: destination,
-            travelMode: travMode
-          };
-          directionsService.route(request, function (result, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-              directionsDisplay.setDirections(result);
-            }
-          });
+      /**
+       * Sets position of the current position point.
+       *
+       * @param position Phonegap geolocation Position
+       */
+      updateCurrentPosition: function (position) {
+        if (typeof this.currentPositionPoint === 'undefined') {
+          this.createPositionMarker();
+          this.currentPositionPoint.render();
         }
-      });
+
+        this.currentPositionPoint.model.set('coords', [
+          [position.coords.latitude, position.coords.longitude]
+        ]);
+      },
+
+      /**
+       * Replaces points on the map.
+       *
+       * @param {Location} newPoints the new points to paint on the map.
+       */
+      replacePoints: function (newPoints) {
+        this.removeAllMarkers();
+        this.addMarkers(newPoints);
+      },
+
+      /**
+       * Remove all markers from the map.
+       */
+      removeAllMarkers: function () {
+        _.each(this.pointViews, function (pointView) {
+          // remove all the map markers
+          pointView.remove();
+        });
+
+        // empty the map
+        this.pointViews = [];
+      },
+
+      /**
+       * Add new markers to the map.
+       *
+       * @param newPoints the new markers.
+       */
+      addMarkers: function (newPoints) {
+        var self = this;
+
+        newPoints.each(function (item) {
+          var point = null;
+          var shape = item.get('shape');
+
+          if (shape === "line") {
+            point = new LineLocationView({ model: item, gmap: self.map, infoWindow: self.infoWindowView });
+          }
+          else if (shape === "polygon") {
+            point = new PolygonLocationView({ model: item, gmap: self.map, infoWindow: self.infoWindowView });
+          }
+          else {
+            point = new PointLocationView({ model: item, gmap: self.map, infoWindow: self.infoWindowView });
+          }
+
+          // if the polygon has an icon, draw it
+          if (item.getPin() !== null && (shape === "line" || shape === "polygon")) {
+            var iconPoint = new PointLocationView({
+              model: item,
+              gmap: self.map,
+              infoWindow: self.infoWindowView,
+              customizedPosition: point.getCenter()});
+            self.pointViews.push(iconPoint);
+          }
+
+          self.pointViews.push(point);
+        });
+
+        // If there is only one marker on the map, display the info window.
+        if (_.size(this.pointViews) === 1) {
+          var point = _.first(this.pointViews);
+          point.openInfoWindow(point.model, point.marker);
+        }
+      },
+
+      /**
+       * Print directions on the map.
+       *
+       * @param travelMode walking, bicycling, driving, or public transportation
+       * @param destination optional parameter, defaults to destination (global variable)
+       */
+      getDirections: function (travelMode, destination) {
+        var orig = this.currentPositionPoint.getPosition();
+        var travMode = null;
+
+        if (travelMode === "walking") {
+          travMode = google.maps.DirectionsTravelMode.WALKING;
+        } else if (travelMode === "bicycling") {
+          travMode = google.maps.DirectionsTravelMode.BICYCLING;
+        } else if (travelMode === "driving") {
+          travMode = google.maps.DirectionsTravelMode.DRIVING;
+        } else if (travelMode === "publicTransp") {
+          travMode = google.maps.DirectionsTravelMode.TRANSIT;
+        }
+
+        var directionsService = new google.maps.DirectionsService();
+        var directionsDisplay = new google.maps.DirectionsRenderer();
+        directionsDisplay.setMap(this.map);
+
+        if (directionsDisplay) {
+          directionsDisplay.setPanel(document.getElementById("dir_panel"));
+        }
+
+        var request = {
+          origin: orig,
+          destination: destination,
+          travelMode: travMode
+        };
+        directionsService.route(request, function (result, status) {
+          if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(result);
+          }
+        });
+      }
+    });
 });

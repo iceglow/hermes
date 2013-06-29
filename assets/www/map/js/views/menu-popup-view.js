@@ -51,7 +51,8 @@ define([
         initialize: function (options) {
           _.bindAll(this, "render", "selectCampus", "updateCampuses");
 
-          this.campuses = options.campuses;
+        this.campuses = options.campuses;
+        this.searchView = options.searchView;
 
           // Calculate header size & position menupopup beneath
           var header = $('div[data-role="header"]');
@@ -70,10 +71,10 @@ define([
           this.$el.on("popupafterclose", this.buttonUnpress);
         },
 
-        /** Registers events */
-        events: {
-          "click #menupopupList": "selectCampus"
-        },
+      /** Registers events */
+      events: {
+        "click .campus-link": "selectCampus"
+      },
 
         /**
          * Render the campus popup view.
@@ -84,8 +85,9 @@ define([
             $(this).popup("close");
           });
 
-          this.$el.popup("open");
-        },
+        this.searchView.hideFilteredList();
+        this.$el.popup("open");
+      },
 
         /**
          * Triggered by a campus selection. Sets the campus in the map app & closes the popup.
@@ -97,8 +99,9 @@ define([
           var campusId = $(evt.target).closest('li').get(0).id.split("campus-")[1];
           this.trigger('selected', this.campuses.get(campusId));
 
-          this.$el.popup('close');
-        },
+        this.$el.popup('close');
+        evt.stopImmediatePropagation();
+      },
 
         /**
          * Refreshes the campus list in the popup.
@@ -107,14 +110,18 @@ define([
           // remove everything from the list
           $("#menupopupList").find("li").remove();
 
-          // append all campuses
-          this.campuses.each(function (campus) {
-            $("#menupopupList").append("<li id='campus-" + campus.get('id') + "' data-icon='false' data-theme='b'><a href='javascript://nop'>" + campus.get('name') + "</a></li>");
-          });
+        // append headline
+        $("#menupopupList").append("<li class='campus-header no-li-styling' data-theme='y'><p data-i18n='map.campusList.choosecampus'> Choose&nbsp;campus:</p></li>");
 
-          $("#menupopupList").listview();
-          $("#menupopupList").listview("refresh"); // jQuery mobile-ify the added elements
-        },
+        // append all campuses
+        this.campuses.each(function (campus) {
+          $("#menupopupList").append("<li class='campus-link' id='campus-" + campus.get('id') + "' data-icon='false' data-theme='b'><a href='javascript://nop'>" + campus.get('name') + "</a></li>");
+        });
+
+        $('#menupopupList').i18n();
+        $("#menupopupList").listview();
+        $("#menupopupList").listview("refresh"); // jQuery mobile-ify the added elements
+      },
 
         /**
          * Changes button to pressed or unpressed

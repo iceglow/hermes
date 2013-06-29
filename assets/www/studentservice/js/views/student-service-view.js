@@ -39,24 +39,25 @@ define([
   return Backbone.View.extend({
     initialize: function () {
 
-      $(document).on('deviceready.appview', this.handleDeviceReady);
+    $(document).on('deviceready.appview', this.handleDeviceReady);
 
     initLocale({ resGetPath: '../i18n/__lng__.json' });
     $('div[data-role="header"] > h1').attr('data-i18n', 'studentService.header.title');
     this.$el.i18n();
 
-    if(i18n.detectLanguage().indexOf("sv-") >= 0) {
-      var listLanguage = config.studentServiceSwe.menu;
+    var listLanguage = [];
+    if (i18n.detectLanguage().indexOf("sv-") >= 0) {
+      listLanguage = config.studentServiceSwe.menu;
     } else {
-      var listLanguage = config.studentServiceEng.menu;
+      listLanguage = config.studentServiceEng.menu;
     }
 
-    this.menu = _.map(listLanguage, function(obj) {
+    this.menu = _.map(listLanguage, function (obj) {
       obj.title = i18n.t(obj.title);
       return obj;
     });
 
-    this.menu = _.sortBy(this.menu, function(obj){
+    this.menu = _.sortBy(this.menu, function (obj) {
       return obj.title;
     });
   },
@@ -65,37 +66,37 @@ define([
    * Render the student service view.
    */
   render: function () {
-    _.each(this.menu, function(obj) {
+    _.each(this.menu, function (obj) {
       $('#studentservice-menu').append(JST["studentservice/menu"](obj));
     });
     $("#studentservice-menu").listview('refresh');
   },
 
-    events: {
-      'click a.servicelink': 'handleServiceLinkClick'
-    },
+  events: {
+    'click a.servicelink': 'handleServiceLinkClick'
+  },
 
-    /**
-     * Remove handler for the view.
-     */
-    remove: function () {
-      $(document).off('.appview');
+  /**
+   * Remove handler for the view.
+   */
+  remove: function () {
+    $(document).off('.appview');
 
-      Backbone.View.prototype.remove.call(this);
-    },
+    Backbone.View.prototype.remove.call(this);
+  },
 
-    /**
-     * Handles the device ready event.
-     */
-    handleDeviceReady: function () {
-      gaPlugin.trackPage(null, null, "studentservice/index.html");
-    },
+  /**
+   * Handles the device ready event.
+   */
+  handleDeviceReady: function () {
+    gaPlugin.trackPage(null, null, "studentservice/index.html");
+  },
 
-    /**
-     * Handles the device ready event.
-     */
-    handleServiceLinkClick: function (event) {
-      gaPlugin.trackPage(null, null, $(event.target).attr("href"));
-    }
-  });
+  /**
+   * Handles the device ready event.
+   */
+  handleServiceLinkClick: function (event) {
+    gaPlugin.trackPage(null, null, $(event.target).attr("href"));
+  }
+});
 });

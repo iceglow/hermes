@@ -32,102 +32,104 @@
 /**
  * Tests for the StudentView
  */
+
 define([
   'config',
   'backbone',
   'service/js/views/student-service-view',
   'spec/mocks/plugin-mocks'
 ], function (config, Backbone, StudentView) {
-  describe('Student view', function () {
-    beforeEach(function () {
-      var html = "<div data-role='page' id='studentservice_page' style='width:200px; height:200px'>" +
-          "<div id='studentservice_view' data-role='content'>" +
-          "<ul data-role='listview' data-inset='true' class='studentservice-list' id='studentservice-menu'>" +
-          "</ul>" +
-          "</div>";
+describe('Student view', function () {
+  beforeEach(function () {
+    var html = "<div data-role='page' id='studentservice_page' style='width:200px; height:200px'>" +
+        "<div id='studentservice_view' data-role='content'>" +
+        "<ul data-role='listview' data-inset='true' class='studentservice-list' id='studentservice-menu'>" +
+        "</ul>" +
+        "</div>";
 
-      $('#stage').replaceWith(html);
-      $.mobile.loadPage("#studentservice_page", {prefetch: "true"});
+    $('#stage').replaceWith(html);
+    $.mobile.loadPage("#studentservice_page", {prefetch: "true"});
 
-      this.view = new StudentView({ el: $('#studentservice_page') });
-      this.view.render();
-    });
+    this.view = new StudentView({ el: $('#studentservice_page') });
+    this.view.render();
+  });
 
-    afterEach(function () {
-      $('#studentservice_page').replaceWith("<div id='stage'></div>");
-    });
+  afterEach(function () {
+    $('#studentservice_page').replaceWith("<div id='stage'></div>");
+  });
 
-    describe('render', function() {
-      it('Menu should be populated with 9 list items', function() {
-        expect($('#studentservice-menu').children().size()).toEqual(9);
-      });
-    });
-
-    describe('on deviceready', function () {
-      it('Should initiate i18n and return the swedish list depending when swedish is the language', function() {
-        spyOn(i18n, 'detectLanguage').andReturn('sv-SE');
-        this.view = new StudentView({ el: $('#studentservice_page')});
-
-        expect(this.view.menu.length).toEqual(config.studentServiceSwe.menu.length);
-
-        for(var i=0; i < this.view.menu.length; i++) {
-          expect(config.studentServiceSwe.menu).toContain(this.view.menu[i]);
-        }
-      });
-
-      it('Should initiate i18n and return the english list when english is the default language', function() {
-        spyOn(i18n, 'detectLanguage').andReturn('en');
-        this.view = new StudentView({ el: $('#studentservice_page')});
-
-        expect(this.view.menu.length).toEqual(config.studentServiceEng.menu.length);
-
-        for(var i=0; i < this.view.menu.length; i++) {
-          expect(config.studentServiceEng.menu).toContain(this.view.menu[i]);
-        }
-      });
-
-      it('Should initiate i18n and return the english list when neither english nor swedish is the default language', function() {
-        spyOn(i18n, 'detectLanguage').andReturn('fr-FR');
-        this.view = new StudentView({ el: $('#studentservice_page')});
-
-        expect(this.view.menu.length).toEqual(config.studentServiceEng.menu.length);
-
-        for(var i=0; i < this.view.menu.length; i++) {
-          expect(config.studentServiceEng.menu).toContain(this.view.menu[i]);
-        }
-      });
-
-      it('should call trackPage on GAPlugin for correct page', function () {
-
-        spyOn(window.plugins.gaPlugin, 'trackPage');
-
-        $(document).trigger('deviceready');
-
-        expect(window.plugins.gaPlugin.trackPage).toHaveBeenCalledWith(null, null, "studentservice/index.html");
-      });
-    });
-
-    describe('on handleServiceLinkClick', function () {
-      it('should call trackPage on GAPlugin for link target', function () {
-        spyOn(window.plugins.gaPlugin, 'trackPage');
-
-        var target = $('.servicelink');
-        $(target).trigger('click');
-
-        expect(window.plugins.gaPlugin.trackPage).toHaveBeenCalledWith(null, null, target.attr('href'));
-      });
-    });
-
-    describe('on off event', function () {
-      it('should remove handler for the view', function () {
-        spyOn(Backbone.View.prototype, 'remove');
-
-        $(document).trigger('deviceready');
-
-        this.view.remove();
-        expect(Backbone.View.prototype.remove).toHaveBeenCalled();
-      });
+  describe('render', function() {
+    it('Menu should be populated with 9 list items', function() {
+      expect($('#studentservice-menu').children().size()).toEqual(9);
     });
   });
-});
 
+  describe('on deviceready', function () {
+
+    it('Should initiate i18n and return the swedish list depending when swedish is the language', function() {
+      spyOn(i18n, 'detectLanguage').andReturn('sv-SE');
+      this.view = new StudentView({ el: $('#studentservice_page')});
+
+      expect(this.view.menu.length).toEqual(config.studentServiceSwe.menu.length);
+
+      for(var i=0; i < this.view.menu.length; i++) {
+       expect(config.studentServiceSwe.menu).toContain(this.view.menu[i]);
+      }
+    });
+
+    it('Should initiate i18n and return the english list when english is the default language', function() {
+      spyOn(i18n, 'detectLanguage').andReturn('en');
+      this.view = new StudentView({ el: $('#studentservice_page')});
+
+      expect(this.view.menu.length).toEqual(config.studentServiceEng.menu.length);
+
+      for(var i=0; i < this.view.menu.length; i++) {
+        expect(config.studentServiceEng.menu).toContain(this.view.menu[i]);
+      }
+    });
+
+    it('Should initiate i18n and return the english list when neither english nor swedish is the default language', function() {
+      spyOn(i18n, 'detectLanguage').andReturn('fr-FR');
+      this.view = new StudentView({ el: $('#studentservice_page')});
+
+      expect(this.view.menu.length).toEqual(config.studentServiceEng.menu.length);
+
+      for(var i=0; i < this.view.menu.length; i++) {
+        expect(config.studentServiceEng.menu).toContain(this.view.menu[i]);
+      }
+    });
+
+    it('should call trackPage on GAPlugin for correct page', function () {
+
+      spyOn(window.plugins.gaPlugin, 'trackPage');
+
+      $(document).trigger('deviceready');
+
+      expect(window.plugins.gaPlugin.trackPage).toHaveBeenCalledWith(null, null, "studentservice/index.html");
+    });
+  });
+
+  describe('on handleServiceLinkClick', function () {
+    it('should call trackPage on GAPlugin for link target', function () {
+      spyOn(window.plugins.gaPlugin, 'trackPage');
+
+      var target = $('.servicelink');
+      $(target).trigger('click');
+
+      expect(window.plugins.gaPlugin.trackPage).toHaveBeenCalledWith(null, null, target.attr('href'));
+    });
+  });
+
+  describe('on off event', function(){
+    it('should remove handler for the view', function(){
+      spyOn(Backbone.View.prototype, 'remove');
+
+      $(document).trigger('deviceready');
+
+      this.view.remove();
+      expect(Backbone.View.prototype.remove).toHaveBeenCalled();
+    });
+  });
+
+});
+});

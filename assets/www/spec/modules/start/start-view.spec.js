@@ -40,45 +40,46 @@ define([
   'spec/mocks/plugin-mocks',
   'spec/mocks/navigator-mocks'
 ], function (config, Backbone, helper, StartView) {
-  describe('Start view', function () {
-    beforeEach(function () {
-      $('#stage').append("<a id='sisulink' href='http://sisu.it.su.se'>sisu</a>");
-      this.view = new StartView({el: $('#stage')});
-    });
 
-    describe('on deviceready event', function () {
-      it('should hide splash screen', function () {
-        runs(function () {
-          spyOn(navigator.splashscreen, 'hide');
-          config.core.splashscreen.timeout = 1;
-          $(document).trigger('deviceready');
-        });
+describe('Start view', function () {
+  beforeEach(function () {
+    $('#stage').append("<a id='sisulink' href='http://sisu.it.su.se'>sisu</a>");
+    this.view = new StartView({el: $('#stage')});
+  });
 
-        helper.delay(10, function () {
-          expect(navigator.splashscreen.hide).toHaveBeenCalled();
-        });
+  describe('on deviceready event', function () {
+    it('should hide splash screen', function () {
+      runs(function () {
+        spyOn(navigator.splashscreen, 'hide');
+        config.core.splashscreen.timeout = 1;
+        $(document).trigger('deviceready');
+      });
+
+      helper.delay(10, function () {
+        expect(navigator.splashscreen.hide).toHaveBeenCalled();
       });
     });
+  });
 
-    describe('on sisu link click event', function () {
-      it('should call GAPlugin.trackPage', function () {
-        spyOn(window.plugins.gaPlugin, 'trackPage');
+  describe('on sisu link click event', function () {
+    it('should call GAPlugin.trackPage', function () {
+      spyOn(window.plugins.gaPlugin, 'trackPage');
 
-        $('#sisulink').trigger('click');
+      $('#sisulink').trigger('click');
 
-        expect(window.plugins.gaPlugin.trackPage).toHaveBeenCalledWith(null, null, 'http://sisu.it.su.se');
-      });
+      expect(window.plugins.gaPlugin.trackPage).toHaveBeenCalledWith(null, null, 'http://sisu.it.su.se');
     });
+  });
 
   describe('on off event', function () {
     it('should remove handler for the view', function () {
       spyOn(Backbone.View.prototype, 'remove');
 
-        $(document).trigger('deviceready');
+      $(document).trigger('deviceready');
 
-        this.view.remove();
-        expect(Backbone.View.prototype.remove).toHaveBeenCalled();
-      });
+      this.view.remove();
+      expect(Backbone.View.prototype.remove).toHaveBeenCalled();
     });
   });
+});
 });
